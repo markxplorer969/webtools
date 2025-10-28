@@ -7,13 +7,15 @@ import {
   ShieldCheck, 
   Link, 
   CaseUpper,
-  Image
+  Image,
+  LockKeyhole
 } from 'lucide-react';
 
 export interface Tool {
   name: string;
   description: string;
   icon: any;
+  slug?: string;
 }
 
 export interface ToolCategory {
@@ -60,6 +62,12 @@ const allToolsData: ToolCategory[] = [
   {
     categoryName: "Keamanan",
     tools: [
+      {
+        name: "Multi 2FA Authenticator",
+        description: "Kelola banyak kode 2FA dalam satu dashboard real-time.",
+        icon: LockKeyhole,
+        slug: 'multi-2fa-authenticator'
+      },
       {
         name: "Encoder / Decoder Base64",
         description: "Encode atau decode teks ke Base64.",
