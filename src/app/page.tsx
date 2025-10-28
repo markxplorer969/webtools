@@ -2,24 +2,13 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useState } from 'react';
 import { 
   ArrowRight, 
   FastForward, 
   ShieldCheck, 
   Sparkles, 
-  Coffee,
-  QrCode,
-  KeyRound,
-  FileText,
-  Palette,
-  Paintbrush,
-  ShieldCheck as Shield,
-  Link as LinkIcon,
-  CaseUpper,
-  Image,
-  TrendingUp,
-  Users,
-  Zap
+  Coffee
 } from 'lucide-react';
 import allToolsData from '@/lib/toolsData';
 
@@ -28,31 +17,29 @@ export default function Home() {
   const totalTools = allToolsData.reduce((acc, category) => acc + category.tools.length, 0);
   const totalCategories = allToolsData.length;
 
-  // Ambil 6 tools pertama untuk preview
-  const featuredTools = allToolsData.flatMap(category => category.tools).slice(0, 6);
+  // State untuk glare effect
+  const [glarePositions, setGlarePositions] = useState<{[key: string]: {x: number, y: number}}>({});
+
+  // Glare effect handlers
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, cardId: string) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setGlarePositions(prev => ({
+      ...prev,
+      [cardId]: { x, y }
+    }));
+  };
+
+  const handleMouseLeave = (cardId: string) => {
+    setGlarePositions(prev => ({
+      ...prev,
+      [cardId]: { x: -100, y: -100 }
+    }));
+  };
 
   // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-
   const floatingVariants = {
     initial: { y: 0 },
     animate: {
@@ -60,7 +47,7 @@ export default function Home() {
       transition: {
         duration: 3,
         repeat: Infinity,
-        ease: "easeInOut"
+        ease: "easeInOut" as const
       }
     }
   };
@@ -125,152 +112,54 @@ export default function Home() {
               Jelajahi Semua Tools
               <ArrowRight className="w-5 h-5" />
             </Link>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex items-center gap-2 text-neutral-grey"
-            >
-              <Zap className="w-4 h-4 text-electric-blue" />
-              <span className="text-sm">100% Gratis • Tanpa Registrasi</span>
-            </motion.div>
           </motion.div>
-        </div>
-      </section>
 
-      {/* Statistics Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
+          {/* Statistics Grid - Integrated into Hero */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 mt-12 text-center"
           >
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-dark-grey p-6 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-6 rounded-lg text-center glass-hover glare-effect"
             >
               <div className="text-3xl md:text-4xl font-bold text-electric-blue mb-2">
                 {totalTools}
               </div>
-              <div className="text-sm text-neutral-grey">Tools Tersedia</div>
+              <div className="text-sm text-white/70">Tools Tersedia</div>
             </motion.div>
             
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-dark-grey p-6 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-6 rounded-lg text-center glass-hover glare-effect"
             >
               <div className="text-3xl md:text-4xl font-bold text-electric-blue mb-2">
                 {totalCategories}
               </div>
-              <div className="text-sm text-neutral-grey">Kategori</div>
+              <div className="text-sm text-white/70">Kategori</div>
             </motion.div>
             
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-dark-grey p-6 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-6 rounded-lg text-center glass-hover glare-effect"
             >
               <div className="text-3xl md:text-4xl font-bold text-mint-green mb-2">
                 100%
               </div>
-              <div className="text-sm text-neutral-grey">Gratis</div>
+              <div className="text-sm text-white/70">Gratis</div>
             </motion.div>
             
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="bg-dark-grey p-6 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-6 rounded-lg text-center glass-hover glare-effect"
             >
               <div className="text-3xl md:text-4xl font-bold text-mint-green mb-2">
                 0ms
               </div>
-              <div className="text-sm text-neutral-grey">Loading Time</div>
+              <div className="text-sm text-white/70">Loading Time</div>
             </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Tools Preview */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-off-white mb-4">
-              Tools Populer
-            </h2>
-            <p className="text-lg text-neutral-grey max-w-2xl mx-auto">
-              Intip beberapa tools yang paling banyak digunakan
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {featuredTools.map((tool, index) => {
-              const IconComponent = tool.icon;
-              return (
-                <motion.div
-                  key={tool.name}
-                  variants={itemVariants}
-                  whileHover={{ 
-                    y: -8,
-                    transition: { duration: 0.2 }
-                  }}
-                  className="bg-dark-grey p-6 rounded-lg opacity-60 cursor-not-allowed relative group"
-                >
-                  {/* Badge */}
-                  <span className="absolute top-3 right-3 bg-neutral-grey text-dark-charcoal text-xs font-bold py-1 px-2 rounded-full">
-                    Segera Hadir
-                  </span>
-
-                  {/* Hover effect */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-electric-blue/10 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                  <div className="flex flex-col items-center text-center relative z-10">
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      transition={{ duration: 0.2 }}
-                      className="mb-4"
-                    >
-                      <IconComponent className="w-12 h-12 text-electric-blue opacity-80" />
-                    </motion.div>
-                    <h3 className="text-lg font-heading font-semibold text-off-white mb-2">
-                      {tool.name}
-                    </h3>
-                    <p className="text-sm text-neutral-grey leading-relaxed">
-                      {tool.description}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center mt-12"
-          >
-            <Link
-              href="/tools"
-              className="inline-flex items-center gap-2 border-2 border-electric-blue text-electric-blue font-semibold py-3 px-6 rounded-full transition-all hover:bg-electric-blue hover:text-dark-charcoal hover:scale-105"
-            >
-              Lihat Semua Tools
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </motion.div>
         </div>
       </section>
@@ -293,26 +182,36 @@ export default function Home() {
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               whileHover={{ y: -8 }}
-              className="bg-dark-grey p-8 rounded-lg text-center group"
+              className="relative p-6 rounded-lg h-full bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/15 transition-colors flex flex-col items-center text-center group glare-effect"
+              onMouseMove={(e) => handleMouseMove(e, 'fast')}
+              onMouseLeave={() => handleMouseLeave('fast')}
             >
+              {/* Glare Layer */}
+              <div 
+                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle 600px at ${glarePositions.fast?.x || -100}px ${glarePositions.fast?.y || -100}px, rgba(255, 255, 255, 0.1), transparent 40%)`,
+                }}
+              />
+              
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ duration: 0.2 }}
-                className="w-16 h-16 bg-electric-blue/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                className="w-16 h-16 bg-electric-blue/10 rounded-full flex items-center justify-center mb-6"
               >
                 <FastForward className="w-8 h-8 text-electric-blue" />
               </motion.div>
-              <h3 className="text-xl font-heading font-semibold text-off-white mb-4">
+              <h3 className="text-xl font-heading font-semibold text-white mb-4">
                 Instan & Cepat
               </h3>
-              <p className="text-neutral-grey leading-relaxed">
+              <p className="text-white/70 leading-relaxed">
                 Semua alat berjalan 100% di browser Anda (client-side). Tanpa upload, tanpa menunggu server.
               </p>
             </motion.div>
@@ -323,19 +222,29 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
               whileHover={{ y: -8 }}
-              className="bg-dark-grey p-8 rounded-lg text-center group"
+              className="relative p-6 rounded-lg h-full bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/15 transition-colors flex flex-col items-center text-center group glare-effect"
+              onMouseMove={(e) => handleMouseMove(e, 'privacy')}
+              onMouseLeave={() => handleMouseLeave('privacy')}
             >
+              {/* Glare Layer */}
+              <div 
+                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle 600px at ${glarePositions.privacy?.x || -100}px ${glarePositions.privacy?.y || -100}px, rgba(255, 255, 255, 0.1), transparent 40%)`,
+                }}
+              />
+              
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ duration: 0.2 }}
-                className="w-16 h-16 bg-electric-blue/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                className="w-16 h-16 bg-electric-blue/10 rounded-full flex items-center justify-center mb-6"
               >
                 <ShieldCheck className="w-8 h-8 text-electric-blue" />
               </motion.div>
-              <h3 className="text-xl font-heading font-semibold text-off-white mb-4">
+              <h3 className="text-xl font-heading font-semibold text-white mb-4">
                 Privasi Terjaga
               </h3>
-              <p className="text-neutral-grey leading-relaxed">
+              <p className="text-white/70 leading-relaxed">
                 Data Anda tidak pernah dikirim atau disimpan di server kami. Sepenuhnya aman di perangkat Anda.
               </p>
             </motion.div>
@@ -346,19 +255,29 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
               whileHover={{ y: -8 }}
-              className="bg-dark-grey p-8 rounded-lg text-center group"
+              className="relative p-6 rounded-lg h-full bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/15 transition-colors flex flex-col items-center text-center group glare-effect"
+              onMouseMove={(e) => handleMouseMove(e, 'free')}
+              onMouseLeave={() => handleMouseLeave('free')}
             >
+              {/* Glare Layer */}
+              <div 
+                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle 600px at ${glarePositions.free?.x || -100}px ${glarePositions.free?.y || -100}px, rgba(255, 255, 255, 0.1), transparent 40%)`,
+                }}
+              />
+              
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ duration: 0.2 }}
-                className="w-16 h-16 bg-electric-blue/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                className="w-16 h-16 bg-electric-blue/10 rounded-full flex items-center justify-center mb-6"
               >
                 <Sparkles className="w-8 h-8 text-electric-blue" />
               </motion.div>
-              <h3 className="text-xl font-heading font-semibold text-off-white mb-4">
+              <h3 className="text-xl font-heading font-semibold text-white mb-4">
                 Gratis & Bebas Iklan
               </h3>
-              <p className="text-neutral-grey leading-relaxed">
+              <p className="text-white/70 leading-relaxed">
                 Gunakan semua alat sepuasnya tanpa biaya tersembunyi atau iklan yang mengganggu.
               </p>
             </motion.div>
@@ -374,7 +293,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-dark-grey rounded-2xl py-16 px-8 text-center relative overflow-hidden"
+            className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl py-16 px-8 text-center relative overflow-hidden glass-hover glare-effect"
           >
             {/* Background decoration */}
             <div className="absolute inset-0 overflow-hidden">

@@ -48,7 +48,7 @@ export default function RootLayout({
         className="min-h-screen flex flex-col antialiased bg-gray-950 text-gray-100"
       >
         <Header />
-        <main className="flex-grow container mx-auto px-4 py-8">
+        <main className="flex-grow container mx-auto px-4 pt-20 pb-8">
           {children}
         </main>
         <Footer />

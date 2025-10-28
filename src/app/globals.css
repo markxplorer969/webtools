@@ -116,6 +116,25 @@
   * {
     @apply border-border outline-ring/50;
   }
+  
+  body {
+    @apply bg-gray-950 text-gray-100;
+    font-family: var(--font-inter);
+
+    /* --- TAMBAHKAN INI UNTUK EFEK GLASSMORPHISM --- */
+    background-image: radial-gradient(
+      circle at 10% 10%,
+      rgba(0, 191, 255, 0.1),  /* Sedikit cahaya electric-blue */
+      rgba(0, 0, 0, 0) 30%     /* Transparan setelah 30% */
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(62, 180, 137, 0.1), /* Sedikit cahaya mint-green */
+      rgba(0, 0, 0, 0) 30%    /* Transparan setelah 30% */
+    );
+    background-attachment: fixed; /* Mencegah gradien bergeser saat scroll */
+    /* ------------------------------------------- */
+  }
 }
 
 /* Glassmorphism enhancements */
@@ -151,5 +170,18 @@
   
   .glare-effect:hover::before {
     left: 100%;
+  }
+  
+  /* Enhanced glassmorphism for cards */
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 hover:bg-white/15 transition-colors;
+  }
+  
+  .glass-button {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors;
+  }
+  
+  .glass-button-active {
+    @apply bg-white/20 backdrop-blur-md border border-white/30;
   }
 }

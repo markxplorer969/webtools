@@ -105,7 +105,7 @@ export default function ToolsPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="bg-dark-grey p-4 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
             >
               <div className="text-2xl font-bold text-electric-blue">{totalTools}</div>
               <div className="text-sm text-neutral-grey">Total Tools</div>
@@ -114,7 +114,7 @@ export default function ToolsPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="bg-dark-grey p-4 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
             >
               <div className="text-2xl font-bold text-electric-blue">{totalCategories}</div>
               <div className="text-sm text-neutral-grey">Kategori</div>
@@ -123,7 +123,7 @@ export default function ToolsPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4 }}
-              className="bg-dark-grey p-4 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
             >
               <div className="text-2xl font-bold text-electric-blue">
                 {allMatchingTools.length}
@@ -134,7 +134,7 @@ export default function ToolsPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
-              className="bg-dark-grey p-4 rounded-lg text-center"
+              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
             >
               <div className="text-2xl font-bold text-mint-green">100%</div>
               <div className="text-sm text-neutral-grey">Gratis</div>
@@ -158,10 +158,10 @@ export default function ToolsPage() {
                 initial="hidden"
                 animate="visible"
                 onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
                   selectedCategory === 'all'
-                    ? 'bg-electric-blue text-dark-charcoal'
-                    : 'bg-dark-grey text-neutral-grey hover:bg-grey-700'
+                    ? 'bg-white/20 backdrop-blur-md border-white/30 text-white'
+                    : 'bg-white/5 backdrop-blur-md border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'
                 }`}
               >
                 Semua Kategori
@@ -174,10 +174,10 @@ export default function ToolsPage() {
                   animate="visible"
                   transition={{ delay: 0.1 * index }}
                   onClick={() => setSelectedCategory(category.categoryName)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
                     selectedCategory === category.categoryName
-                      ? 'bg-electric-blue text-dark-charcoal'
-                      : 'bg-dark-grey text-neutral-grey hover:bg-grey-700'
+                      ? 'bg-white/20 backdrop-blur-md border-white/30 text-white'
+                      : 'bg-white/5 backdrop-blur-md border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'
                   }`}
                 >
                   {category.categoryName}
@@ -224,7 +224,7 @@ export default function ToolsPage() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
               >
                 {allMatchingTools.map((tool, index) => (
                   <motion.div
@@ -260,7 +260,7 @@ export default function ToolsPage() {
                         setSearchQuery('');
                         setSelectedCategory('all');
                       }}
-                      className="mt-4 px-6 py-2 bg-electric-blue text-dark-charcoal rounded-full font-medium"
+                      className="mt-4 px-6 py-2 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full font-medium hover:bg-white/30 transition-colors"
                     >
                       Reset Filter
                     </motion.button>
