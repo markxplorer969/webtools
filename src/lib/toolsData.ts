@@ -1,0 +1,97 @@
+import { 
+  QrCode, 
+  KeyRound, 
+  FileText, 
+  Palette, 
+  Paintbrush, 
+  ShieldCheck, 
+  Link, 
+  CaseUpper,
+  Image
+} from 'lucide-react';
+
+export interface Tool {
+  name: string;
+  description: string;
+  icon: any;
+}
+
+export interface ToolCategory {
+  categoryName: string;
+  tools: Tool[];
+}
+
+const allToolsData: ToolCategory[] = [
+  {
+    categoryName: "Generator",
+    tools: [
+      {
+        name: "Generator Kode QR",
+        description: "Ubah URL atau teks menjadi Kode QR.",
+        icon: QrCode
+      },
+      {
+        name: "Generator Password",
+        description: "Buat password yang kuat dan acak.",
+        icon: KeyRound
+      },
+      {
+        name: "Generator Lorem Ipsum",
+        description: "Hasilkan teks placeholder standar.",
+        icon: FileText
+      }
+    ]
+  },
+  {
+    categoryName: "Maker",
+    tools: [
+      {
+        name: "Pembuat Palet Warna",
+        description: "Buat dan ekspor skema palet warna.",
+        icon: Palette
+      },
+      {
+        name: "Pembuat Gradien",
+        description: "Hasilkan kode CSS untuk gradien indah.",
+        icon: Paintbrush
+      }
+    ]
+  },
+  {
+    categoryName: "Keamanan",
+    tools: [
+      {
+        name: "Encoder / Decoder Base64",
+        description: "Encode atau decode teks ke Base64.",
+        icon: ShieldCheck
+      },
+      {
+        name: "Encoder / Decoder URL",
+        description: "Encode string agar aman untuk URL.",
+        icon: Link
+      }
+    ]
+  },
+  {
+    categoryName: "Utilitas & Teks",
+    tools: [
+      {
+        name: "Penghitung Kata",
+        description: "Hitung kata, karakter, dan paragraf.",
+        icon: FileText
+      },
+      {
+        name: "Pengubah Kapitalisasi",
+        description: "Ubah teks menjadi UPPERCASE, lowercase, dll.",
+        icon: CaseUpper
+      },
+      {
+        name: "Konverter JPG ke PNG",
+        description: "Konversi format gambar dengan cepat.",
+        icon: Image
+      }
+    ]
+  }
+];
+
+export default allToolsData;
