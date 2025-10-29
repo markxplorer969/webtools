@@ -8,7 +8,8 @@ import {
   Link, 
   CaseUpper,
   Image,
-  LockKeyhole
+  LockKeyhole,
+  UserCheck
 } from 'lucide-react';
 
 export interface Tool {
@@ -65,8 +66,7 @@ const allToolsData: ToolCategory[] = [
       {
         name: "Multi 2FA Authenticator",
         description: "Kelola banyak kode 2FA dalam satu dashboard real-time.",
-        icon: LockKeyhole,
-        slug: 'multi-2fa-authenticator'
+        icon: LockKeyhole
       },
       {
         name: "Encoder / Decoder Base64",
@@ -83,6 +83,12 @@ const allToolsData: ToolCategory[] = [
   {
     categoryName: "Utilitas & Teks",
     tools: [
+      {
+        name: "Facebook UID Checker",
+        description: "Cek status Facebook UID secara massal dengan batching.",
+        icon: UserCheck,
+        slug: 'facebook-uid-checker'
+      },
       {
         name: "Penghitung Kata",
         description: "Hitung kata, karakter, dan paragraf.",

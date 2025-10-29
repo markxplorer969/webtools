@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import allToolsData from '@/lib/toolsData';
-import Multi2FA from '@/components/tools/Multi2FA';
+import FacebookUidChecker from '@/components/tools/FacebookUidChecker';
 
 interface ToolPageProps {
   params: {
@@ -28,8 +28,8 @@ export default function ToolPage({ params }: ToolPageProps) {
   // Render the appropriate component based on slug
   const renderToolComponent = () => {
     switch (slug) {
-      case 'multi-2fa-authenticator':
-        return <Multi2FA />;
+      case 'facebook-uid-checker':
+        return <FacebookUidChecker />;
       default:
         return (
           <div className="text-center py-20">
