@@ -1,42 +1,37 @@
 import type { Metadata } from "next";
-import { Poppins, Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import PageWrapper from "@/components/PageWrapper";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Mark Tools - Elegant Digital Utilities",
-  description: "Minimalist suite of elegant digital tools designed for modern creators. Experience the beauty of simplicity with powerful functionality.",
-  keywords: ["Mark Tools", "digital tools", "minimalist", "utilities", "productivity", "elegant design"],
-  authors: [{ name: "Mark Tools Team" }],
+  title: "Z.ai Code Scaffold - AI-Powered Development",
+  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
+  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
+  authors: [{ name: "Z.ai Team" }],
   icons: {
-    icon: "/favicon.ico",
+    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
-    title: "Mark Tools - Elegant Digital Utilities",
-    description: "Minimalist suite of elegant digital tools designed for modern creators",
-    url: "https://marktools.com",
-    siteName: "Mark Tools",
+    title: "Z.ai Code Scaffold",
+    description: "AI-powered development with modern React stack",
+    url: "https://chat.z.ai",
+    siteName: "Z.ai",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mark Tools",
-    description: "Minimalist suite of elegant digital tools",
+    title: "Z.ai Code Scaffold",
+    description: "AI-powered development with modern React stack",
   },
 };
 
@@ -48,20 +43,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${poppins.variable} ${inter.variable} antialiased`}
-        style={{
-          backgroundColor: '#121212',
-          color: '#E0E0E0',
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh'
-        }}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <Header />
-        <PageWrapper>
-          {children}
-        </PageWrapper>
-        <Footer />
+        {children}
         <Toaster />
       </body>
     </html>
