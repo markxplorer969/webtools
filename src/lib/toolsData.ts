@@ -312,5 +312,5 @@ export const categories = [
   { name: 'Development', count: allToolsData.filter(tool => tool.category === 'Development').length },
   { name: 'Utility', count: allToolsData.filter(tool => tool.category === 'Utility').length },
   { name: 'Productivity', count: allToolsData.filter(tool => tool.category === 'Productivity').length },
-  { name: 'Design', count: allTools.filter(tool => tool.category === 'Design').length }
+  { name: 'Design', count: allToolsData.filter(tool => tool.category === 'Design').length }
 ];

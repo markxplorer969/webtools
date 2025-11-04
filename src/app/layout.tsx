@@ -38,6 +38,13 @@ export const metadata: Metadata = {
     title: "Mark Tools",
     description: "Minimalist suite of elegant digital tools",
   },
+  other: {
+    'google-adsense-account': 'ca-pub-8046841280254497',
+    'google-site-verification': 'your-verification-code',
+  },
+  verification: {
+    google: 'your-verification-code',
+  },
 };
 
 export default function RootLayout({
@@ -47,6 +54,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Google AdSense Script */}
+        <script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8046841280254497"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${poppins.variable} ${inter.variable} antialiased`}
         style={{

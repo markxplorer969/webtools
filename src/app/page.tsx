@@ -6,7 +6,7 @@ import { ArrowRight, Zap, Shield, Heart, Github, Twitter } from 'lucide-react';
 import Link from 'next/link';
 
 const HomePage: React.FC = () => {
-  const [glarePosition, setGlarePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [glarePosition, setGlarePosition] = useState<{ x: number; y: number }>({ x: -100, y: -100 });
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [cardPositions, setCardPositions] = useState<Array<{x: number, y: number, width: number, height: number}>>([]);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -14,8 +14,8 @@ const HomePage: React.FC = () => {
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     setGlarePosition({ x, y });
   };
 
@@ -204,12 +204,18 @@ const HomePage: React.FC = () => {
                 className="group"
               >
                 <div 
-                  className="glass rounded-2xl p-8 h-full glare-effect relative overflow-hidden cursor-pointer"
+                  className="glass rounded-2xl p-8 h-full relative overflow-hidden cursor-pointer"
                   onMouseMove={handleMouseMove}
-                  style={{
-                    background: `radial-gradient(circle at ${glarePosition.x}% ${glarePosition.y}%, rgba(255, 255, 255, 0.04) 0%, transparent 50%)`
-                  }}
+                  onMouseLeave={() => setGlarePosition({ x: -100, y: -100 })}
                 >
+                  {/* Glare Layer */}
+                  <div 
+                    className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: `radial-gradient(circle at ${glarePosition.x}px ${glarePosition.y}px, rgba(255, 255, 255, 0.04), transparent 30%)`
+                    }}
+                  />
+                  
                   <div className="relative z-10">
                     <div className="w-16 h-16 bg-accent/20 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/30 transition-colors duration-300">
                       <feature.icon className="w-8 h-8 text-accent" />
@@ -426,28 +432,49 @@ const HomePage: React.FC = () => {
                 {/* Trakteer Support Card */}
                 <motion.div 
                   variants={cardVariants}
-                  className="glass rounded-2xl p-10 text-center group hover:scale-105 transition-all duration-300 cursor-pointer mb-12"
+                  className="glass rounded-2xl p-10 text-center group hover:scale-105 transition-all duration-300 cursor-pointer mb-12 relative overflow-hidden"
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={() => setGlarePosition({ x: -100, y: -100 })}
                 >
-                  <div className="w-20 h-20 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: '#888888' }}>
-                    <Heart className="w-10 h-10" style={{ color: '#121212' }} />
-                  </div>
-                  <h4 className="text-3xl font-heading font-semibold mb-4" style={{ color: '#E0E0E0' }}>
-                    Support Us on Trakteer
-                  </h4>
-                  <p className="text-lg mb-8" style={{ color: '#B0B0B0' }}>
-                    Buy us a coffee and support our development through Trakteer. Every contribution helps us build better tools for the community.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a 
-                      href="https://trakteer.id"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-8 py-4 rounded-lg transition-all duration-300 font-semibold text-lg flex items-center space-x-2 group"
-                      style={{ backgroundColor: '#888888', color: '#121212' }}
-                    >
-                      <span>Support on Trakteer</span>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
-                    </a>
+                  {/* Glare Layer */}
+                  <div 
+                    className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: `radial-gradient(circle at ${glarePosition.x}px ${glarePosition.y}px, rgba(255, 255, 255, 0.04), transparent 30%)`
+                    }}
+                  />
+                  
+                  <div className="relative z-10">
+                    <div className="w-20 h-20 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: '#888888' }}>
+                      <Heart className="w-10 h-10" style={{ color: '#121212' }} />
+                    </div>
+                    <h4 className="text-3xl font-heading font-semibold mb-4" style={{ color: '#E0E0E0' }}>
+                      Support Us on Trakteer
+                    </h4>
+                    <p className="text-lg mb-8" style={{ color: '#B0B0B0' }}>
+                      Buy us a coffee and support our development through Trakteer. Every contribution helps us build better tools for the community.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                      <a 
+                        href="https://trakteer.id"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group px-8 py-4 bg-accent text-dark-char rounded-lg hover:bg-secondary-text transition-all duration-300 font-semibold text-lg flex items-center space-x-2 transform hover:scale-105"
+                        style={{ 
+                          backgroundColor: '#888888', 
+                          color: '#121212'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#B0B0B0';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#888888';
+                        }}
+                      >
+                        <span>Support on Trakteer</span>
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+                      </a>
+                    </div>
                   </div>
                 </motion.div>
 
@@ -462,40 +489,79 @@ const HomePage: React.FC = () => {
                         href="https://github.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-3 px-6 py-3 rounded-lg transition-all duration-300 group"
-                        style={{ 
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(68, 68, 68, 0.5)'
-                        }}
+                        className="block"
                       >
-                        <Github className="w-5 h-5" style={{ color: '#B0B0B0' }} />
-                        <span style={{ color: '#B0B0B0' }}>Star Our Repo</span>
+                        <motion.div
+                          variants={cardVariants}
+                          className="glass rounded-xl p-6 text-center group hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                          onMouseMove={handleMouseMove}
+                          onMouseLeave={() => setGlarePosition({ x: -100, y: -100 })}
+                        >
+                          {/* Glare Layer */}
+                          <div 
+                            className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            style={{
+                              background: `radial-gradient(circle at ${glarePosition.x}px ${glarePosition.y}px, rgba(255, 255, 255, 0.04), transparent 30%)`
+                            }}
+                          />
+                          
+                          <div className="relative z-10">
+                            <Github className="w-8 h-8 mb-3" style={{ color: '#888888' }} />
+                            <span style={{ color: '#E0E0E0' }} className="font-medium">Star Our Repo</span>
+                          </div>
+                        </motion.div>
                       </a>
                       
                       <a 
                         href="https://twitter.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-3 px-6 py-3 rounded-lg transition-all duration-300 group"
-                        style={{ 
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(68, 68, 68, 0.5)'
-                        }}
+                        className="block"
                       >
-                        <Twitter className="w-5 h-5" style={{ color: '#B0B0B0' }} />
-                        <span style={{ color: '#B0B0B0' }}>Follow Us</span>
+                        <motion.div
+                          variants={cardVariants}
+                          className="glass rounded-xl p-6 text-center group hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                          onMouseMove={handleMouseMove}
+                          onMouseLeave={() => setGlarePosition({ x: -100, y: -100 })}
+                        >
+                          {/* Glare Layer */}
+                          <div 
+                            className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            style={{
+                              background: `radial-gradient(circle at ${glarePosition.x}px ${glarePosition.y}px, rgba(255, 255, 255, 0.04), transparent 30%)`
+                            }}
+                          />
+                          
+                          <div className="relative z-10">
+                            <Twitter className="w-8 h-8 mb-3" style={{ color: '#888888' }} />
+                            <span style={{ color: '#E0E0E0' }} className="font-medium">Follow Us</span>
+                          </div>
+                        </motion.div>
                       </a>
                       
                       <a 
                         href="mailto:hello@marktools.com"
-                        className="flex items-center space-x-3 px-6 py-3 rounded-lg transition-all duration-300 group"
-                        style={{ 
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(68, 68, 68, 0.5)'
-                        }}
+                        className="block"
                       >
-                        <Heart className="w-5 h-5" style={{ color: '#B0B0B0' }} />
-                        <span style={{ color: '#B0B0B0' }}>Spread the Word</span>
+                        <motion.div
+                          variants={cardVariants}
+                          className="glass rounded-xl p-6 text-center group hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                          onMouseMove={handleMouseMove}
+                          onMouseLeave={() => setGlarePosition({ x: -100, y: -100 })}
+                        >
+                          {/* Glare Layer */}
+                          <div 
+                            className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            style={{
+                              background: `radial-gradient(circle at ${glarePosition.x}px ${glarePosition.y}px, rgba(255, 255, 255, 0.04), transparent 30%)`
+                            }}
+                          />
+                          
+                          <div className="relative z-10">
+                            <Heart className="w-8 h-8 mb-3" style={{ color: '#888888' }} />
+                            <span style={{ color: '#E0E0E0' }} className="font-medium">Spread the Word</span>
+                          </div>
+                        </motion.div>
                       </a>
                     </div>
                   </motion.div>
