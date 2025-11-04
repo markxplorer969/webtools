@@ -66,11 +66,14 @@ import {
   QrCode,
   Fingerprint,
   Eye,
-  EyeOff
+  EyeOff,
+  UserCheck,
+  UserX,
+  Facebook
 } from 'lucide-react';
 
 export const allToolsData: Tool[] = [
-  // Tool MVP - Live Tool
+  // Tool MVP - Live Tools
   {
     slug: 'multi-2fa-authenticator',
     name: 'Multi-2FA Authenticator',
@@ -81,6 +84,27 @@ export const allToolsData: Tool[] = [
     layout_size: '2x1',
     tags: ['2FA', 'Authentication', 'Security'],
     url: '/tools/multi-2fa-authenticator'
+  },
+  {
+    slug: 'facebook-uid-checker',
+    name: 'Facebook UID Checker',
+    description: 'Check Facebook profile availability with real-time UID validation.',
+    category: 'Utilitas',
+    icon: Facebook,
+    is_live: true,
+    layout_size: '2x1',
+    tags: ['Facebook', 'UID', 'Checker', 'Validation'],
+    url: '/tools/facebook-uid-checker'
+  },
+    slug: 'facebook-uid-checker',
+    name: 'Facebook UID Checker',
+    description: 'Check Facebook profile availability with real-time UID validation.',
+    category: 'Security',
+    icon: UserCheck,
+    is_live: true,
+    layout_size: '2x1',
+    tags: ['Facebook', 'UID', 'Checker', 'Validation'],
+    url: '/tools/facebook-uid-checker'
   },
   
   // Additional Live Tools
