@@ -1,49 +1,9 @@
-import { Metadata } from 'next';
+'use client';
 import { motion } from 'framer-motion';
 import { Shield, Zap, Heart, Users, Target, Award } from 'lucide-react';
 import Link from 'next/link';
 
-// SEO Metadata (Pilar 12)
-export const metadata: Metadata = {
-  title: 'Tentang Kami - Mark Tools | Platform Digital Utilities Modern',
-  description: 'Temukan filosofi dan misi Mark Tools. Kami berkomitmen untuk menyediakan platform tools digital yang elegan, aman, dan gratis untuk modern creators. Didesain dengan prinsip minimalis untuk produktivitas maksimal.',
-  keywords: ['tentang kami', 'about Mark Tools', 'Mark Tools', 'digital utilities', 'minimalist design', 'elegant tools', 'modern creators', 'productivity platform', 'secure tools'],
-  authors: [{ name: 'Mark Tools Team' }],
-  creator: 'Mark Tools',
-  publisher: 'Mark Tools',
-  robots: 'index, follow',
-  openGraph: {
-    title: 'Tentang Kami - Mark Tools | Platform Digital Utilities Modern',
-    description: 'Temukan filosofi dan misi Mark Tools. Kami berkomitmen untuk menyediakan platform tools digital yang elegan, aman, dan gratis untuk modern creators. Didesain dengan prinsip minimalis untuk produktivitas maksimal.',
-    url: 'https://marktools.com/tentang',
-    siteName: 'Mark Tools',
-    type: 'website',
-    locale: 'en_US',
-    images: [
-      {
-        url: 'https://marktools.com/tentang/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Tentang Kami - Mark Tools',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Tentang Kami - Mark Tools',
-    description: 'Temukan filosofi dan misi Mark Tools. Platform tools digital elegan untuk modern creators.',
-    images: ['https://marktools.com/tentang/twitter-image.jpg'],
-    creator: '@marktools',
-    site: '@marktools',
-  },
-  alternates: {
-    canonical: 'https://marktools.com/tentang',
-    languages: {
-      'en-US': 'https://marktools.com/en/about',
-      'id-ID': 'https://marktools.com/id/tentang',
-    },
-  },
-};
+
 
 export default function TentangPage() {
   const values = [

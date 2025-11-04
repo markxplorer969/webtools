@@ -1,6 +1,4 @@
 'use client';
-
-import { Metadata } from 'next';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import ToolCard from '@/components/ToolCard';
@@ -11,47 +9,7 @@ import { allToolsData, categories } from '@/lib/toolsData';
 import { Tool } from '@/lib/types';
 import { Filter } from 'lucide-react';
 
-// SEO Metadata (Pilar 12)
-export const metadata: Metadata = {
-  title: 'Kumpulan Tools Digital - Mark Tools',
-  description: 'Jelajahi koleksi tools elegan untuk produktivitas, keamanan, dan pengembangan. Multi-2FA Authenticator, Password Generator, Text Analyzer, QR Code Generator, dan lainnya.',
-  keywords: ['kumpulan tools', 'digital tools', 'productivity tools', 'security tools', '2FA authenticator', 'password generator', 'text analyzer', 'QR generator', 'URL shortener', 'Mark Tools'],
-  authors: [{ name: 'Mark Tools Team' }],
-  creator: 'Mark Tools',
-  publisher: 'Mark Tools',
-  robots: 'index, follow',
-  openGraph: {
-    title: 'Kumpulan Tools Digital - Mark Tools',
-    description: 'Jelajahi koleksi tools elegan untuk produktivitas, keamanan, dan pengembangan. Multi-2FA Authenticator, Password Generator, Text Analyzer, QR Code Generator, dan lainnya.',
-    url: 'https://marktools.com/tools',
-    siteName: 'Mark Tools',
-    type: 'website',
-    locale: 'en_US',
-    images: [
-      {
-        url: 'https://marktools.com/tools/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Kumpulan Tools Digital - Mark Tools',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Kumpulan Tools Digital - Mark Tools',
-    description: 'Jelajahi koleksi tools elegan untuk produktivitas, keamanan, dan pengembangan.',
-    images: ['https://marktools.com/tools/twitter-image.jpg'],
-    creator: '@marktools',
-    site: '@marktools',
-  },
-  alternates: {
-    canonical: 'https://marktools.com/tools',
-    languages: {
-      'en-US': 'https://marktools.com/en/tools',
-      'id-ID': 'https://marktools.com/id/tools',
-    },
-  },
-};
+
 
 const ToolsPage: React.FC = () => {
   // State Management

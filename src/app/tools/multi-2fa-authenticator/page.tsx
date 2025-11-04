@@ -1,6 +1,4 @@
 'use client';
-
-import { Metadata } from 'next';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { TOTP } from 'otpauth';
@@ -12,47 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 
-// SEO Metadata (Pilar 12)
-export const metadata: Metadata = {
-  title: 'Multi-2FA Authenticator - Mark Tools',
-  description: 'Generate and manage 2FA codes for multiple services in one secure place. Real-time TOTP generation with automatic refresh. Support for multiple accounts with clean interface.',
-  keywords: ['2FA authenticator', 'TOTP', 'two-factor authentication', 'security', 'OTP generator', 'Google Authenticator', 'Microsoft Authenticator', 'Mark Tools'],
-  authors: [{ name: 'Mark Tools Team' }],
-  creator: 'Mark Tools',
-  publisher: 'Mark Tools',
-  robots: 'index, follow',
-  openGraph: {
-    title: 'Multi-2FA Authenticator - Mark Tools',
-    description: 'Generate and manage 2FA codes for multiple services in one secure place. Real-time TOTP generation with automatic refresh.',
-    url: 'https://marktools.com/tools/multi-2fa-authenticator',
-    siteName: 'Mark Tools',
-    type: 'website',
-    locale: 'en_US',
-    images: [
-      {
-        url: 'https://marktools.com/tools/multi-2fa-authenticator/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Multi-2FA Authenticator - Mark Tools',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Multi-2FA Authenticator - Mark Tools',
-    description: 'Generate and manage 2FA codes for multiple services in one secure place.',
-    images: ['https://marktools.com/tools/multi-2fa-authenticator/twitter-image.jpg'],
-    creator: '@marktools',
-    site: '@marktools',
-  },
-  alternates: {
-    canonical: 'https://marktools.com/tools/multi-2fa-authenticator',
-    languages: {
-      'en-US': 'https://marktools.com/en/tools/multi-2fa-authenticator',
-      'id-ID': 'https://marktools.com/id/tools/multi-2fa-authenticator',
-    },
-  },
-};
+
 
 interface CodeEntry {
   id: string;

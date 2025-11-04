@@ -21,47 +21,9 @@ interface ShortenedURL {
   customAlias?: string;
 }
 
-// SEO Metadata (Pilar 12)
-export const metadata: Metadata = {
-  title: 'URL Shortener - Mark Tools',
-  description: 'Create short, memorable URLs for long links. Track clicks and analytics with our free URL shortener tool. Perfect for social media sharing and marketing campaigns.',
-  keywords: ['URL shortener', 'link shortener', 'URL shortener tool', 'link management', 'marketing tool', 'social media', 'analytics', 'Mark Tools'],
-  authors: [{ name: 'Mark Tools Team' }],
-  creator: 'Mark Tools',
-  publisher: 'Mark Tools',
-  robots: 'index, follow',
-  openGraph: {
-    title: 'URL Shortener - Mark Tools',
-    description: 'Create short, memorable URLs for long links. Track clicks and analytics with our free URL shortener tool.',
-    url: 'https://marktools.com/tools/url-shortener',
-    siteName: 'Mark Tools',
-    type: 'website',
-    locale: 'en_US',
-    images: [
-      {
-        url: 'https://marktools.com/tools/url-shortener/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'URL Shortener - Mark Tools',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'URL Shortener - Mark Tools',
-    description: 'Create short, memorable URLs for long links.',
-    images: ['https://marktools.com/tools/url-shortener/twitter-image.jpg'],
-    creator: '@marktools',
-    site: '@marktools',
-  },
-  alternates: {
-    canonical: 'https://marktools.com/tools/url-shortener',
-    languages: {
-      'en-US': 'https://marktools.com/en/url-shortener',
-      'id-ID': 'https://marktools.com/id/url-shortener',
-    },
-  },
-};
+
+
+export default function URLShortenerPage() {
   const [originalUrl, setOriginalUrl] = useState('');
   const [customAlias, setCustomAlias] = useState('');
   const [urls, setUrls] = useState<ShortenedURL[]>([]);
