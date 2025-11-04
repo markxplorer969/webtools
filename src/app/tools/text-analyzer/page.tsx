@@ -1,5 +1,6 @@
 'use client';
 
+import { Metadata } from 'next';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Type, FileText, BarChart, Hash, Clock, BookOpen, Copy, Trash2 } from 'lucide-react';
@@ -10,6 +11,48 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+
+// SEO Metadata (Pilar 12)
+export const metadata: Metadata = {
+  title: 'Text Analyzer - Mark Tools',
+  description: 'Analyze text for readability, word count, and sentiment. Advanced text analysis with real-time statistics, readability scoring, and comprehensive insights.',
+  keywords: ['text analyzer', 'text analysis', 'readability checker', 'word count', 'sentiment analysis', 'readability score', 'Mark Tools'],
+  authors: [{ name: 'Mark Tools Team' }],
+  creator: 'Mark Tools',
+  publisher: 'Mark Tools',
+  robots: 'index, follow',
+  openGraph: {
+    title: 'Text Analyzer - Mark Tools',
+    description: 'Analyze text for readability, word count, and sentiment. Advanced text analysis with real-time statistics, readability scoring, and comprehensive insights.',
+    url: 'https://marktools.com/tools/text-analyzer',
+    siteName: 'Mark Tools',
+    type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: 'https://marktools.com/tools/text-analyzer/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Text Analyzer - Mark Tools',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Text Analyzer - Mark Tools',
+    description: 'Analyze text for readability, word count, and sentiment.',
+    images: ['https://marktools.com/tools/text-analyzer/twitter-image.jpg'],
+    creator: '@marktools',
+    site: '@marktools',
+  },
+  alternates: {
+    canonical: 'https://marktools.com/tools/text-analyzer',
+    languages: {
+      'en-US': 'https://marktools.com/en/tools/text-analyzer',
+      'id-ID': 'https://marktools.com/id/tools/text-analyzer',
+    },
+  },
+};
 
 interface TextAnalysis {
   characterCount: number;

@@ -1,9 +1,52 @@
 'use client';
 
+import { Metadata } from 'next';
 import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Zap, Shield, Heart, Github, Twitter } from 'lucide-react';
 import Link from 'next/link';
+
+// SEO Metadata (Pilar 12)
+export const metadata: Metadata = {
+  title: 'Mark Tools - Elegant Digital Utilities for Modern Creators',
+  description: 'Experience minimalist suite of powerful digital tools designed for modern creators. Lightning-fast, secure, and completely free utilities that work instantly in your browser.',
+  keywords: ['Mark Tools', 'digital tools', 'minimalist', 'utilities', 'productivity', 'elegant design', 'web tools', 'online tools', 'free tools'],
+  authors: [{ name: 'Mark Tools Team' }],
+  creator: 'Mark Tools',
+  publisher: 'Mark Tools',
+  robots: 'index, follow',
+  openGraph: {
+    title: 'Mark Tools - Elegant Digital Utilities for Modern Creators',
+    description: 'Minimalist suite of powerful digital tools designed for modern creators. Lightning-fast, secure, and completely free utilities.',
+    url: 'https://marktools.com',
+    siteName: 'Mark Tools',
+    type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: 'https://marktools.com/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Mark Tools - Elegant Digital Utilities',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mark Tools - Elegant Digital Utilities',
+    description: 'Minimalist suite of powerful digital tools designed for modern creators.',
+    images: ['https://marktools.com/twitter-image.jpg'],
+    creator: '@marktools',
+    site: '@marktools',
+  },
+  alternates: {
+    canonical: 'https://marktools.com',
+    languages: {
+      'en-US': 'https://marktools.com/en',
+      'id-ID': 'https://marktools.com/id',
+    },
+  },
+};
 
 const HomePage: React.FC = () => {
   const [glarePosition, setGlarePosition] = useState<{ x: number; y: number }>({ x: -100, y: -100 });

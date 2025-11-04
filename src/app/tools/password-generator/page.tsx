@@ -1,5 +1,6 @@
 'use client';
 
+import { Metadata } from 'next';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Key, Copy, RefreshCw, Shield, Eye, EyeOff, Check } from 'lucide-react';
@@ -11,6 +12,48 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
+
+// SEO Metadata (Pilar 12)
+export const metadata: Metadata = {
+  title: 'Password Generator - Mark Tools',
+  description: 'Create strong, unique passwords with customizable options. Advanced password generator with character type selection, strength indicator, and security tips. Generate secure passwords instantly.',
+  keywords: ['password generator', 'password creator', 'strong password', 'secure password', 'random password', 'password strength', 'Mark Tools'],
+  authors: [{ name: 'Mark Tools Team' }],
+  creator: 'Mark Tools',
+  publisher: 'Mark Tools',
+  robots: 'index, follow',
+  openGraph: {
+    title: 'Password Generator - Mark Tools',
+    description: 'Create strong, unique passwords with customizable options. Advanced password generator with character type selection, strength indicator, and security tips.',
+    url: 'https://marktools.com/tools/password-generator',
+    siteName: 'Mark Tools',
+    type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: 'https://marktools.com/tools/password-generator/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Password Generator - Mark Tools',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Password Generator - Mark Tools',
+    description: 'Create strong, unique passwords with customizable options.',
+    images: ['https://marktools.com/tools/password-generator/twitter-image.jpg'],
+    creator: '@marktools',
+    site: '@marktools',
+  },
+  alternates: {
+    canonical: 'https://marktools.com/tools/password-generator',
+    languages: {
+      'en-US': 'https://marktools.com/en/tools/password-generator',
+      'id-ID': 'https://marktools.com/id/tools/password-generator',
+    },
+  },
+};
 
 interface PasswordSettings {
   length: number;

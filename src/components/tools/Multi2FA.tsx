@@ -1,58 +1,10 @@
 'use client';
 
-import { Metadata } from 'next';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { TOTP } from 'otpauth';
+import { OTPAuth } from 'otpauth';
 import { LockKeyhole, Copy, Plus, Trash2, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
-
-// SEO Metadata (Pilar 12)
-export const metadata: Metadata = {
-  title: 'Multi-2FA Authenticator - Mark Tools',
-  description: 'Generate and manage 2FA codes for multiple services in one secure place. Real-time TOTP generation with automatic refresh. Support for multiple accounts with clean interface.',
-  keywords: ['2FA authenticator', 'TOTP', 'two-factor authentication', 'security', 'OTP generator', 'Google Authenticator', 'Microsoft Authenticator', 'Mark Tools'],
-  authors: [{ name: 'Mark Tools Team' }],
-  creator: 'Mark Tools',
-  publisher: 'Mark Tools',
-  robots: 'index, follow',
-  openGraph: {
-    title: 'Multi-2FA Authenticator - Mark Tools',
-    description: 'Generate and manage 2FA codes for multiple services in one secure place. Real-time TOTP generation with automatic refresh.',
-    url: 'https://marktools.com/tools/multi-2fa-authenticator',
-    siteName: 'Mark Tools',
-    type: 'website',
-    locale: 'en_US',
-    images: [
-      {
-        url: 'https://marktools.com/tools/multi-2fa-authenticator/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Multi-2FA Authenticator - Mark Tools',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Multi-2FA Authenticator - Mark Tools',
-    description: 'Generate and manage 2FA codes for multiple services in one secure place.',
-    images: ['https://marktools.com/tools/multi-2fa-authenticator/twitter-image.jpg'],
-    creator: '@marktools',
-    site: '@marktools',
-  },
-  alternates: {
-    canonical: 'https://marktools.com/tools/multi-2fa-authenticator',
-    languages: {
-      'en-US': 'https://marktools.com/en/tools/multi-2fa-authenticator',
-      'id-ID': 'https://marktools.com/id/tools/multi-2fa-authenticator',
-    },
-  },
-};
+import { Tool } from '@/lib/types';
 
 interface CodeEntry {
   id: string;
@@ -61,16 +13,17 @@ interface CodeEntry {
   secret: string;
 }
 
-export default function Multi2FAAuthenticator() {
+interface Multi2FAProps {
+  tool: Tool;
+}
+
+export default function Multi2FA({ tool }: Multi2FAProps) {
   // State Management (React Hooks)
   const [rawInput, setRawInput] = useState('');
   const [codes, setCodes] = useState<CodeEntry[]>([]);
   const [countdown, setCountdown] = useState(30);
   const [glarePosition, setGlarePosition] = useState({ x: -100, y: -100 });
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newAccountName, setNewAccountName] = useState('');
-  const [newAccountSecret, setNewAccountSecret] = useState('');
 
   // Ref for timer animation
   const timerRef = useRef<NodeJS.Timeout>();
@@ -105,7 +58,7 @@ export default function Multi2FAAuthenticator() {
 
         // Kripto: Generate TOTP
         try {
-          const totp = new TOTP({
+          const totp = new OTPAuth.TOTP({
             secret: secret.replace(/\s/g, ''), // Clean secret
             algorithm: 'SHA1',
             digits: 6,
@@ -160,9 +113,6 @@ export default function Multi2FAAuthenticator() {
     
     // Reset copied state after 2 seconds
     setTimeout(() => setCopiedId(null), 2000);
-    
-    // Show toast notification
-    toast.success('Code copied to clipboard');
   }, []);
 
   // Handle glare effect
@@ -176,21 +126,6 @@ export default function Multi2FAAuthenticator() {
   const handleMouseLeave = useCallback(() => {
     setGlarePosition({ x: -100, y: -100 });
   }, []);
-
-  // Add account from form
-  const addAccount = () => {
-    if (!newAccountName || !newAccountSecret) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
-
-    const newLine = `${newAccountName} | ${newAccountSecret}`;
-    setRawInput(prev => prev ? `${prev}\n${newLine}` : newLine);
-    setNewAccountName('');
-    setNewAccountSecret('');
-    setShowAddForm(false);
-    toast.success('Account added successfully');
-  };
 
   // Animation variants
   const containerVariants = {
@@ -228,21 +163,18 @@ export default function Multi2FAAuthenticator() {
         <motion.div variants={cardVariants} className="text-center space-y-4">
           <div className="flex items-center justify-center space-x-3">
             <LockKeyhole className="w-8 h-8 text-accent" />
-            <h1 className="text-3xl md:text-4xl font-bold text-white">Multi-2FA Authenticator</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">{tool.name}</h1>
           </div>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Generate and manage 2FA codes for multiple services in one secure place
-          </p>
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">{tool.description}</p>
         </motion.div>
 
         {/* Timer Bar Kustom (Pilar 10) */}
         <motion.div variants={cardVariants} className="w-full">
-          <div className="flex items-center justify-center space-x-4">
-            <Clock className="w-5 h-5 text-accent" />
+          <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-gray-400">Time until next codes</span>
             <span className="text-sm font-mono text-accent">{countdown}s</span>
           </div>
-          <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden mt-2">
+          <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-accent"
               initial={{ width: '100%' }}
@@ -255,75 +187,6 @@ export default function Multi2FAAuthenticator() {
             />
           </div>
         </motion.div>
-
-        {/* Add Account Button */}
-        <motion.div variants={cardVariants} className="flex justify-center">
-          <Button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-accent hover:bg-secondary-text text-dark-char"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add New Account
-          </Button>
-        </motion.div>
-
-        {/* Add Account Form */}
-        {showAddForm && (
-          <motion.div
-            variants={cardVariants}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <Card className="glass border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-white">Add New Account</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Enter your account details to generate 2FA codes
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name" className="text-gray-300">Account Name *</Label>
-                    <Input
-                      id="name"
-                      value={newAccountName}
-                      onChange={(e) => setNewAccountName(e.target.value)}
-                      placeholder="e.g., Google, GitHub"
-                      className="bg-gray-800 border-gray-700 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="secret" className="text-gray-300">Secret Key *</Label>
-                    <Input
-                      id="secret"
-                      value={newAccountSecret}
-                      onChange={(e) => setNewAccountSecret(e.target.value)}
-                      placeholder="Enter your 2FA secret key"
-                      className="bg-gray-800 border-gray-700 text-white"
-                    />
-                  </div>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    onClick={addAccount}
-                    className="bg-accent hover:bg-secondary-text text-dark-char"
-                  >
-                    Add Account
-                  </Button>
-                  <Button
-                    onClick={() => setShowAddForm(false)}
-                    variant="outline"
-                    className="border-gray-700 text-gray-300 hover:bg-gray-800"
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
 
         {/* Implementasi Layout (Blueprint "Mission Control") */}
         <div className="grid md:grid-cols-2 gap-8">
@@ -377,55 +240,35 @@ export default function Multi2FAAuthenticator() {
 
         {/* Instructions */}
         <motion.div variants={cardVariants}>
-          <Card className="glass border-gray-700">
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-semibold text-white mb-4">How to Use</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-accent font-medium mb-2">1. Get Your Secret Keys</h4>
-                  <p className="text-sm text-gray-400">
-                    Find your 2FA secret keys from your authenticator app or service provider.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-accent font-medium mb-2">2. Enter Accounts</h4>
-                  <p className="text-sm text-gray-400">
-                    Add your accounts using the format: Account Name | SECRET_KEY
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-accent font-medium mb-2">3. Generate Codes</h4>
-                  <p className="text-sm text-gray-400">
-                    Codes are generated automatically every 30 seconds.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-accent font-medium mb-2">4. Copy & Use</h4>
-                  <p className="text-sm text-gray-400">
-                    Click the copy button to copy codes for authentication.
-                  </p>
-                </div>
+          <div className="glass rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-white mb-4">How to Use</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-accent font-medium mb-2">1. Get Your Secret Keys</h4>
+                <p className="text-sm text-gray-400">
+                  Find your 2FA secret keys from your authenticator app or service provider.
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Security Notice */}
-        <motion.div variants={cardVariants}>
-          <Card className="glass border-gray-700">
-            <CardContent className="pt-6">
-              <div className="flex items-start space-x-3">
-                <LockKeyhole className="w-5 h-5 text-yellow-400 mt-0.5" />
-                <div>
-                  <h4 className="text-white font-semibold mb-2">Security Notice</h4>
-                  <p className="text-gray-400 text-sm">
-                    This implementation uses the OTPAuth library for secure TOTP generation. 
-                    Your secret keys are processed locally in your browser and are not stored on any server.
-                  </p>
-                </div>
+              <div>
+                <h4 className="text-accent font-medium mb-2">2. Enter Accounts</h4>
+                <p className="text-sm text-gray-400">
+                  Add your accounts using the format: Account Name | SECRET_KEY
+                </p>
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <h4 className="text-accent font-medium mb-2">3. Generate Codes</h4>
+                <p className="text-sm text-gray-400">
+                  Codes are generated automatically every 30 seconds.
+                </p>
+              </div>
+              <div>
+                <h4 className="text-accent font-medium mb-2">4. Copy & Use</h4>
+                <p className="text-sm text-gray-400">
+                  Click the copy button to copy codes for authentication.
+                </p>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </motion.div>
     </div>
