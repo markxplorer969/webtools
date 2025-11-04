@@ -19,31 +19,62 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Mark Tools - Elegant Digital Utilities",
-  description: "Minimalist suite of elegant digital tools designed for modern creators. Experience the beauty of simplicity with powerful functionality.",
-  keywords: ["Mark Tools", "digital tools", "minimalist", "utilities", "productivity", "elegant design"],
+  metadataBase: "https://marktools.web.id",
+  title: "Mark Tools - Kumpulan Alat Instan untuk Produktivitas",
+  description: "Kumpulan tools digital instan untuk meningkatkan produktivitas. QR Generator, Password Generator, 2FA Authenticator, Text Analyzer, URL Shortener, dan lainnya. Gratis, aman, dan mudah digunakan.",
+  keywords: ["Mark Tools", "alat digital", "tools instan", "productivitas", "QR generator", "password generator", "2FA authenticator", "text analyzer", "URL shortener", "marktools.web.id"],
   authors: [{ name: "Mark Tools Team" }],
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "Mark Tools - Elegant Digital Utilities",
-    description: "Minimalist suite of elegant digital tools designed for modern creators",
-    url: "https://marktools.com",
+    title: "Mark Tools - Kumpulan Alat Instan untuk Produktivitas",
+    description: "Kumpulan tools digital instan untuk meningkatkan produktivitas. Gratis, aman, dan mudah digunakan.",
+    url: "https://marktools.web.id",
     siteName: "Mark Tools",
     type: "website",
+    locale: "id_ID",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Mark Tools - Kumpulan Alat Instan untuk Produktivitas",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Mark Tools",
-    description: "Minimalist suite of elegant digital tools",
+    description: "Kumpulan tools digital instan untuk produktivitas",
+    images: ["/twitter-image.jpg"],
+    creator: "@marktools",
+    site: "@marktools",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://marktools.web.id",
+    languages: {
+      "id-ID": "https://marktools.web.id",
+      "en-US": "https://marktools.web.id/en",
+    },
   },
   other: {
-    'google-adsense-account': 'ca-pub-8046841280254497',
-    'google-site-verification': 'your-verification-code',
+    "google-adsense-account": "ca-pub-8046841280254497",
+    "google-site-verification": "your-verification-code",
   },
   verification: {
-    google: 'your-verification-code',
+    google: "your-verification-code",
   },
 };
 
