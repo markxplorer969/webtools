@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Github, Twitter, Mail, Heart } from 'lucide-react';
+import Link from 'next/link';
 
 const Footer: React.FC = () => {
   const footerVariants = {
@@ -34,24 +35,33 @@ const Footer: React.FC = () => {
           {/* Kolom 1: Logo & Copyright */}
           <motion.div variants={itemVariants} className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                <span className="text-dark-charcoal font-bold text-lg">M</span>
-              </div>
-              <span className="text-primary-text font-heading text-xl font-semibold">
-                Mark Tools
-              </span>
+              <Link href="/" className="flex items-center space-x-2 group">
+                <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                  <span className="text-dark-charcoal font-bold text-lg">M</span>
+                </div>
+                <span className="text-primary-text font-heading text-xl font-semibold group-hover:text-accent transition-colors duration-200">
+                  Mark Tools
+                </span>
+              </Link>
             </div>
             <p className="text-secondary-text text-sm leading-relaxed">
-              Elegant digital utilities designed for modern creators who appreciate simplicity and functionality.
+              Kumpulan tools digital instan untuk meningkatkan produktivitas. Gratis, aman, dan mudah digunakan.
             </p>
             <div className="flex items-center space-x-2 text-secondary-text text-sm">
               <span>Made with</span>
               <Heart className="w-4 h-4 text-accent fill-current" />
               <span>by Mark Tools Team</span>
             </div>
-            <p className="text-secondary-text text-xs">
-              © 2024 Mark Tools. All rights reserved.
-            </p>
+            <div className="flex items-center space-x-2 text-secondary-text text-xs">
+              <span>© 2025</span>
+              <Link href="/" className="hover:text-accent transition-colors duration-200">
+                Mark Tools
+              </Link>
+              <span>-</span>
+              <Link href="https://marktools.web.id" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors duration-200">
+                marktools.web.id
+              </Link>
+            </div>
           </motion.div>
 
           {/* Kolom 2: Peta Situs */}
@@ -60,36 +70,36 @@ const Footer: React.FC = () => {
               Quick Links
             </h3>
             <nav className="space-y-2">
-              <a 
+              <Link 
                 href="/" 
                 className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
               >
                 Home
-              </a>
-              <a 
+              </Link>
+              <Link 
                 href="/tools" 
                 className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
               >
                 Tools
-              </a>
-              <a 
+              </Link>
+              <Link 
                 href="/tentang" 
                 className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
               >
                 About Us
-              </a>
-              <a 
-                href="#" 
+              </Link>
+              <Link 
+                href="/privacy" 
                 className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
               >
                 Privacy Policy
-              </a>
-              <a 
-                href="#" 
+              </Link>
+              <Link 
+                href="/terms" 
                 className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
               >
                 Terms of Service
-              </a>
+              </Link>
             </nav>
           </motion.div>
 
@@ -115,12 +125,12 @@ const Footer: React.FC = () => {
               >
                 <Twitter className="w-5 h-5" />
               </a>
-              <a 
-                href="mailto:hello@marktools.com" 
+              <Link 
+                href="mailto:hello@marktools.web.id" 
                 className="w-10 h-10 bg-white/5 backdrop-blur-md border border-divider/50 rounded-lg flex items-center justify-center hover:bg-accent hover:text-dark-charcoal transition-all duration-200 group"
               >
                 <Mail className="w-5 h-5" />
-              </a>
+              </Link>
             </div>
             <div className="space-y-2">
               <p className="text-secondary-text text-sm">
