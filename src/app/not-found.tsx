@@ -1,19 +1,14 @@
+'use client';
+
 export default function NotFound() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'white', marginBottom: '1rem' }}>404 - Page Not Found</h1>
-        <p style={{ color: '#9CA3AF', marginBottom: '2rem' }}>The page you're looking for doesn't exist.</p>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-white mb-4">404 - Page Not Found</h1>
+        <p className="text-gray-400 mb-8">The page you're looking for doesn't exist.</p>
         <a 
           href="/" 
-          style={{ 
-            padding: '0.75rem 1.5rem', 
-            backgroundColor: '#3B82F6', 
-            color: 'white', 
-            borderRadius: '0.5rem',
-            textDecoration: 'none',
-            display: 'inline-block'
-          }}
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           Go Home
         </a>

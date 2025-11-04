@@ -77,7 +77,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
         backdropFilter: 'blur(16px)',
-        border: `1px solid ${isLive ? 'rgba(136, 136, 136, 0.5)' : 'rgba(68, 68, 68, 0.5)'}`,
+        border: '1px solid rgba(68, 68, 68, 0.5)',
         opacity: isLive ? opacity : opacity * 0.5
       }}
     >

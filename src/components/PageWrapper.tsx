@@ -16,7 +16,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
         duration: 0.6, 
         ease: [0.25, 0.46, 0.45, 0.94] 
       }}
-      className="flex-grow container mx-auto px-4 py-8 pt-20"
+      className="flex-grow container mx-auto px-4 py-8"
     >
       {children}
     </motion.main>
