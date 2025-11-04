@@ -1,142 +1,144 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { useState, useEffect } from "react"
-import { Github, Heart, Mail, MessageCircle, Instagram, Music, Code } from "lucide-react"
-import { socialLinks, donationLinks, otherLinks } from "@/data/links"
+import { motion } from 'framer-motion';
+import { Github, Twitter, Mail, Heart } from 'lucide-react';
 
-export default function Footer() {
-  const [mounted, setMounted] = useState(false)
+const Footer: React.FC = () => {
+  const footerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0 }
+  };
 
   return (
-    <footer className="bg-gray-900 py-12 px-6 mt-20">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          {/* Brand Section */}
-          <div className="text-center md:text-left">
-            <h3 className="text-xl font-bold text-white mb-4">Mark Tools</h3>
-            <p className="text-gray-400 text-sm mb-4">
-              Koleksi tools gratis untuk meningkatkan produktivitas Anda.
+    <motion.footer
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={footerVariants}
+      className="bg-dark-grey border-t border-divider mt-auto"
+    >
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Kolom 1: Logo & Copyright */}
+          <motion.div variants={itemVariants} className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                <span className="text-dark-charcoal font-bold text-lg">M</span>
+              </div>
+              <span className="text-primary-text font-heading text-xl font-semibold">
+                Mark Tools
+              </span>
+            </div>
+            <p className="text-secondary-text text-sm leading-relaxed">
+              Elegant digital utilities designed for modern creators who appreciate simplicity and functionality.
             </p>
-            <div className="flex items-center justify-center md:justify-start text-gray-400 text-sm">
-              <span>Dibuat dengan</span>
-              <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" />
-              <span>oleh Mark</span>
+            <div className="flex items-center space-x-2 text-secondary-text text-sm">
+              <span>Made with</span>
+              <Heart className="w-4 h-4 text-accent fill-current" />
+              <span>by Mark Tools Team</span>
             </div>
-          </div>
+            <p className="text-secondary-text text-xs">
+              © 2024 Mark Tools. All rights reserved.
+            </p>
+          </motion.div>
 
-          {/* Social Media Section */}
-          <div className="text-center">
-            <h4 className="text-lg font-semibold text-white mb-4">Ikuti Kami</h4>
-            <div className="flex justify-center space-x-6 mb-4">
-              <a
-                href={socialLinks.instagram.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-pink-400 transition-all duration-300 hover:scale-110"
-                title={socialLinks.instagram.display}
-              >
-                <Instagram className="w-6 h-6" />
-              </a>
-              <a
-                href={socialLinks.tiktok.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-200 transition-all duration-300 hover:scale-110"
-                title={socialLinks.tiktok.display}
-              >
-                <Music className="w-6 h-6" />
-              </a>
-              <a
-                href={socialLinks.github.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-all duration-300 hover:scale-110"
-                title={socialLinks.github.display}
-              >
-                <Github className="w-6 h-6" />
-              </a>
-              <a
-                href={socialLinks.whatsapp.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-green-400 transition-all duration-300 hover:scale-110"
-                title={socialLinks.whatsapp.display}
-              >
-                <MessageCircle className="w-6 h-6" />
-              </a>
-            </div>
-            <p className="text-gray-400 text-sm">
-              Hubungi kami di{" "}
+          {/* Kolom 2: Peta Situs */}
+          <motion.div variants={itemVariants} className="space-y-4">
+            <h3 className="text-primary-text font-heading text-lg font-semibold">
+              Quick Links
+            </h3>
+            <nav className="space-y-2">
               <a 
-                href="mailto:markpengembara76@gmail.com"
-                className="text-blue-400 hover:text-blue-300 transition-colors"
+                href="/" 
+                className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
               >
-                markpengembara76@gmail.com
+                Home
               </a>
-            </p>
-          </div>
+              <a 
+                href="/tools" 
+                className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
+              >
+                Tools
+              </a>
+              <a 
+                href="/tentang" 
+                className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
+              >
+                About Us
+              </a>
+              <a 
+                href="#" 
+                className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
+              >
+                Privacy Policy
+              </a>
+              <a 
+                href="#" 
+                className="block text-secondary-text hover:text-accent transition-colors duration-200 text-sm"
+              >
+                Terms of Service
+              </a>
+            </nav>
+          </motion.div>
 
-          {/* Quick Links Section */}
-          <div className="text-center md:text-right">
-            <h4 className="text-lg font-semibold text-white mb-4">Tautan Cepat</h4>
+          {/* Kolom 3: Tautan Sosial & GitHub */}
+          <motion.div variants={itemVariants} className="space-y-4">
+            <h3 className="text-primary-text font-heading text-lg font-semibold">
+              Connect With Us
+            </h3>
+            <div className="flex space-x-4">
+              <a 
+                href="https://github.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/5 backdrop-blur-md border border-divider/50 rounded-lg flex items-center justify-center hover:bg-accent hover:text-dark-charcoal transition-all duration-200 group"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 bg-white/5 backdrop-blur-md border border-divider/50 rounded-lg flex items-center justify-center hover:bg-accent hover:text-dark-charcoal transition-all duration-200 group"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a 
+                href="mailto:hello@marktools.com" 
+                className="w-10 h-10 bg-white/5 backdrop-blur-md border border-divider/50 rounded-lg flex items-center justify-center hover:bg-accent hover:text-dark-charcoal transition-all duration-200 group"
+              >
+                <Mail className="w-5 h-5" />
+              </a>
+            </div>
             <div className="space-y-2">
-              <Link
-                href={otherLinks.privacy.url}
-                className="block text-gray-400 hover:text-blue-400 transition-colors text-sm"
+              <p className="text-secondary-text text-sm">
+                Support our mission
+              </p>
+              <a 
+                href="#" 
+                className="inline-flex items-center space-x-2 text-accent hover:text-secondary-text transition-colors duration-200 text-sm"
               >
-                {otherLinks.privacy.display}
-              </Link>
-              <Link
-                href={otherLinks.terms.url}
-                className="block text-gray-400 hover:text-blue-400 transition-colors text-sm"
-              >
-                {otherLinks.terms.display}
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Donation Section */}
-        <div className="border-t border-gray-800 pt-6 mb-6">
-          <div className="text-center">
-            <p className="text-gray-400 text-sm mb-4">
-              ❤️ Dukung pengembangan tools ini dengan donasi
-            </p>
-            <div className="flex justify-center space-x-4">
-              <a
-                href={donationLinks.saweria.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-red-500/25"
-              >
-                {donationLinks.saweria.display}
-              </a>
-              <a
-                href={donationLinks.paypal.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-blue-500/25"
-              >
-                {donationLinks.paypal.display}
+                <span>Donate</span>
+                <Heart className="w-4 h-4" />
               </a>
             </div>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="border-t border-gray-800 pt-6">
-          <div className="text-center">
-            <p className="text-gray-400 text-sm">
-              © {mounted ? new Date().getFullYear() : 2025} Mark Tools. All rights reserved.
-            </p>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </footer>
-  )
-}
+    </motion.footer>
+  );
+};
+
+export default Footer;

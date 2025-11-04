@@ -11,14 +11,14 @@ const config: Config = {
   theme: {
         extend: {
                 colors: {
-                        // Palet Warna Kustom Sesuai Blueprint
-                        'dark-charcoal': '#121212', // Background Utama
-                        'dark-grey': '#1E1E1E',   // Background Sekunder (Card/Container)
-                        'off-white': '#E0E0E0',   // Teks Utama
-                        'neutral-grey': '#AAAAAA', // Teks Sekunder
-                        'electric-blue': '#00BFFF', // Aksen Utama (Brand/Hover)
-                        'mint-green': '#3EB489',    // Aksen Sukses
-                        // Warna shadcn/ui yang ada
+                        // Monochromatic Minimalism Palette
+                        'dark-charcoal': '#121212',
+                        'dark-grey': '#1E1E1E',
+                        'primary-text': '#E0E0E0',
+                        'secondary-text': '#B0B0B0',
+                        'divider': '#444444',
+                        'accent': '#888888',
+                        // Existing shadcn colors for compatibility
                         background: 'hsl(var(--background))',
                         foreground: 'hsl(var(--foreground))',
                         card: {
@@ -61,14 +61,16 @@ const config: Config = {
                         }
                 },
                 fontFamily: {
-                        // Font Kustom Sesuai Blueprint
-                        sans: ['var(--font-inter)', 'sans-serif'], // Font Body (Inter)
-                        heading: ['var(--font-poppins)', 'sans-serif'], // Font Judul (Poppins)
+                        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+                        heading: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
                 },
                 borderRadius: {
                         lg: 'var(--radius)',
                         md: 'calc(var(--radius) - 2px)',
                         sm: 'calc(var(--radius) - 4px)'
+                },
+                backdropBlur: {
+                        xs: '2px',
                 }
         }
   },

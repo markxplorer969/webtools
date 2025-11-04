@@ -1,276 +1,328 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, Search } from 'lucide-react';
-import allToolsData from '@/lib/toolsData';
-import SearchBar from '@/components/SearchBar';
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import ToolCard from '@/components/ToolCard';
+import SidebarKategori from '@/components/SidebarKategori';
+import SearchBar from '@/components/SearchBar';
+import FilterDrawer from '@/components/FilterDrawer';
+import { allToolsData, categories } from '@/lib/toolsData';
+import { Tool } from '@/lib/types';
+import { Filter } from 'lucide-react';
 
-export default function ToolsPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+const ToolsPage: React.FC = () => {
+  // State Management
+  const [allTools, setAllTools] = useState<Tool[]>([]);
+  const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>('Semua');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [cardPositions, setCardPositions] = useState<Array<{x: number, y: number, width: number, height: number}>>([]);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  
+  // Refs
+  const gridRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Hitung statistik
-  const totalTools = useMemo(() => 
-    allToolsData.reduce((acc, category) => acc + category.tools.length, 0), []
-  );
+  // Load data on mount
+  useEffect(() => {
+    setAllTools(allToolsData);
+    setFilteredTools(allToolsData);
+  }, []);
 
-  const totalCategories = allToolsData.length;
+  // Filter tools based on category and search
+  useEffect(() => {
+    let filtered = allTools;
 
-  // Filter tools berdasarkan search dan kategori
-  const filteredData = useMemo(() => {
-    let filtered = allToolsData;
+    // Filter by category
+    if (activeCategory !== 'Semua') {
+      filtered = filtered.filter(tool => tool.category === activeCategory);
+    }
 
-    // Filter berdasarkan kategori
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(category => 
-        category.categoryName === selectedCategory
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(tool => 
+        tool.name.toLowerCase().includes(query) ||
+        tool.description.toLowerCase().includes(query) ||
+        tool.category.toLowerCase().includes(query) ||
+        tool.tags?.some(tag => tag.toLowerCase().includes(query))
       );
     }
 
-    // Filter berdasarkan search query
-    if (searchQuery.trim()) {
-      filtered = filtered.map(category => ({
-        ...category,
-        tools: category.tools.filter(tool =>
-          tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          tool.description.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      })).filter(category => category.tools.length > 0);
-    }
+    setFilteredTools(filtered);
+  }, [activeCategory, searchQuery, allTools]);
 
-    return filtered;
-  }, [searchQuery, selectedCategory]);
-
-  // Kumpulkan semua tools yang cocok untuk tampilan pencarian
-  const allMatchingTools = useMemo(() => 
-    filteredData.flatMap(category => category.tools), [filteredData]
-  );
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08
-      }
-    }
+  // Proximity Lighting - Mouse tracking
+  const handleGridMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!gridRef.current) return;
+    
+    const rect = gridRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setMousePosition({ x, y });
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+  // Calculate distance from mouse to card
+  const calculateDistance = (cardX: number, cardY: number, cardWidth: number, cardHeight: number) => {
+    const cardCenterX = cardX + cardWidth / 2;
+    const cardCenterY = cardY + cardHeight / 2;
+    const distance = Math.sqrt(
+      Math.pow(mousePosition.x - cardCenterX, 2) + 
+      Math.pow(mousePosition.y - cardCenterY, 2)
+    );
+    return distance;
+  };
+
+  // Get opacity based on distance
+  const getCardOpacity = (distance: number) => {
+    const maxDistance = 300;
+    const minOpacity = 0.4;
+    const maxOpacity = 1;
+    const opacity = maxOpacity - (distance / maxDistance) * (maxOpacity - minOpacity);
+    return Math.max(minOpacity, Math.min(maxOpacity, opacity));
+  };
+
+  // Update card positions for proximity lighting
+  useEffect(() => {
+    const updateCardPositions = () => {
+      const positions = cardRefs.current.map((ref) => {
+        if (!ref || !gridRef.current) return { x: 0, y: 0, width: 0, height: 0 };
+        
+        const cardRect = ref.getBoundingClientRect();
+        const gridRect = gridRef.current!.getBoundingClientRect();
+        
+        return {
+          x: cardRect.left - gridRect.left,
+          y: cardRect.top - gridRect.top,
+          width: cardRect.width,
+          height: cardRect.height
+        };
+      });
+      
+      setCardPositions(positions);
+    };
+
+    updateCardPositions();
+    window.addEventListener('resize', updateCardPositions);
+    
+    return () => window.removeEventListener('resize', updateCardPositions);
+  }, [filteredTools]);
+
+  // Animation variants
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.4,
-        ease: "easeOut"
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94]
       }
     }
   };
 
-  const categoryVariants = {
-    hidden: { opacity: 0, x: -20 },
+  const gridVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      x: 0,
       transition: {
-        duration: 0.3
+        duration: 0.6,
+        staggerChildren: 0.1
       }
     }
   };
 
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-off-white mb-4">
-            Kumpulan Tools
-          </h1>
-          <p className="text-lg text-neutral-grey max-w-2xl mx-auto mb-8">
-            Cari alat yang Anda butuhkan. Fitur baru ditambahkan setiap minggu.
-          </p>
+    <div className="min-h-screen">
+      {/* Mobile Filter Drawer */}
+      <FilterDrawer
+        isOpen={isFilterDrawerOpen}
+        onClose={() => setIsFilterDrawerOpen(false)}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+      />
 
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
+      {/* Hero Section - Mobile First */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={sectionVariants}
+        className="py-8 md:py-16 relative"
+      >
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-4xl mx-auto space-y-6 md:space-y-8">
+            {/* Title */}
+            <motion.h1 
+              variants={sectionVariants}
+              className="text-3xl md:text-4xl lg:text-6xl font-heading font-bold"
+              style={{ color: '#E0E0E0' }}
             >
-              <div className="text-2xl font-bold text-electric-blue">{totalTools}</div>
-              <div className="text-sm text-neutral-grey">Total Tools</div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
+              Kumpulan Tools Digital
+            </motion.h1>
+            
+            {/* Description */}
+            <motion.p 
+              variants={sectionVariants}
+              className="text-lg md:text-xl lg:text-2xl leading-relaxed"
+              style={{ color: '#B0B0B0' }}
             >
-              <div className="text-2xl font-bold text-electric-blue">{totalCategories}</div>
-              <div className="text-sm text-neutral-grey">Kategori</div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4 }}
-              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
+              Jelajahi koleksi tools elegan untuk produktivitas, keamanan, dan pengembangan.
+            </motion.p>
+
+            {/* Stats */}
+            <motion.div 
+              variants={sectionVariants}
+              className="flex flex-col sm:flex-row gap-3 justify-center items-center"
             >
-              <div className="text-2xl font-bold text-electric-blue">
-                {allMatchingTools.length}
+              <div className="px-4 py-2 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
+                🚀 {filteredTools.filter(tool => tool.is_live).length} Tools Aktif
               </div>
-              <div className="text-sm text-neutral-grey">Tersedia</div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-              className="bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-lg text-center glass-hover"
-            >
-              <div className="text-2xl font-bold text-mint-green">100%</div>
-              <div className="text-sm text-neutral-grey">Gratis</div>
+              <div className="px-4 py-2 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
+                🔄 {filteredTools.filter(tool => !tool.is_live).length} Coming Soon
+              </div>
             </motion.div>
           </div>
+        </div>
+      </motion.section>
 
-          {/* Search Bar */}
-          <div className="mb-8">
-            <SearchBar 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          {/* Filter Controls */}
-          <div className="flex justify-center mb-8">
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2 justify-center">
-              <motion.button
-                variants={categoryVariants}
-                initial="hidden"
-                animate="visible"
-                onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
-                  selectedCategory === 'all'
-                    ? 'bg-white/20 backdrop-blur-md border-white/30 text-white'
-                    : 'bg-white/5 backdrop-blur-md border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'
-                }`}
-              >
-                Semua Kategori
-              </motion.button>
-              {allToolsData.map((category, index) => (
-                <motion.button
-                  key={category.categoryName}
-                  variants={categoryVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ delay: 0.1 * index }}
-                  onClick={() => setSelectedCategory(category.categoryName)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
-                    selectedCategory === category.categoryName
-                      ? 'bg-white/20 backdrop-blur-md border-white/30 text-white'
-                      : 'bg-white/5 backdrop-blur-md border-white/10 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white'
-                  }`}
-                >
-                  {category.categoryName}
-                </motion.button>
-              ))}
+      {/* Main Content */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={sectionVariants}
+        className="pb-16 md:pb-24"
+      >
+        <div className="container mx-auto px-4">
+          {/* Search and Filter Section - Stacked on Mobile */}
+          <div className="space-y-4 md:space-y-6 mb-8 md:mb-12">
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto">
+              <SearchBar 
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Cari tools berdasarkan nama, deskripsi, atau kategori..."
+              />
             </div>
+
+            {/* Filter Button - Mobile Only */}
+            <div className="flex md:hidden justify-center">
+              <button
+                onClick={() => setIsFilterDrawerOpen(true)}
+                className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center space-x-2 border"
+                style={{ 
+                  borderColor: '#888888',
+                  color: '#888888'
+                }}
+              >
+                <Filter className="w-5 h-5" />
+                <span>Filter Kategori</span>
+                {activeCategory !== 'Semua' && (
+                  <span className="px-2 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)', color: '#888888' }}>
+                    {activeCategory}
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {/* Active Category Display - Mobile */}
+            {activeCategory !== 'Semua' && (
+              <div className="md:hidden text-center">
+                <span className="text-sm" style={{ color: '#888888' }}>
+                  Kategori: <span className="font-semibold" style={{ color: '#E0E0E0' }}>{activeCategory}</span>
+                </span>
+              </div>
+            )}
           </div>
-        </motion.div>
 
-        {/* Results Section */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={searchQuery + selectedCategory}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {searchQuery && (
-              <div className="mb-8">
-                <h2 className="text-2xl font-heading font-semibold text-off-white mb-2">
-                  Hasil Pencarian
-                </h2>
-                <p className="text-neutral-grey">
-                  {allMatchingTools.length} tool ditemukan untuk "{searchQuery}"
-                </p>
+          {/* 2-Column Layout - Desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
+            {/* Left Column - Sidebar - Desktop Only */}
+            <div className="hidden md:block">
+              <SidebarKategori 
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+              />
+            </div>
+
+            {/* Right Column - Content */}
+            <div>
+              {/* Results Header */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 space-y-4 md:space-y-0">
+                <div className="text-center md:text-left">
+                  <h2 className="text-xl md:text-2xl font-heading font-semibold mb-2" style={{ color: '#E0E0E0' }}>
+                    {activeCategory === 'Semua' ? 'Semua Tools' : `Tools ${activeCategory}`}
+                  </h2>
+                  <p className="text-sm" style={{ color: '#B0B0B0' }}>
+                    Menampilkan {filteredTools.length} dari {allTools.length} tools
+                  </p>
+                </div>
+
+                {searchQuery && (
+                  <div className="text-center md:text-right">
+                    <span className="text-sm" style={{ color: '#888888' }}>
+                      Filter: "{searchQuery}"
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
 
-            {selectedCategory !== 'all' && !searchQuery && (
-              <div className="mb-8">
-                <h2 className="text-2xl font-heading font-semibold text-off-white mb-2">
-                  Kategori: {selectedCategory}
-                </h2>
-                <p className="text-neutral-grey">
-                  {allMatchingTools.length} tool tersedia
-                </p>
-              </div>
-            )}
-
-            {/* Tools Grid */}
-            {allMatchingTools.length > 0 ? (
+              {/* Adaptive Masonry Grid */}
               <motion.div
-                variants={containerVariants}
+                ref={gridRef}
+                variants={gridVariants}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                onMouseMove={handleGridMouseMove}
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px]"
+                style={{ gridAutoFlow: 'dense' }}
               >
-                {allMatchingTools.map((tool, index) => (
-                  <motion.div
-                    key={`${tool.name}-${index}`}
-                    variants={itemVariants}
-                  >
-                    <ToolCard tool={tool} />
-                  </motion.div>
+                {filteredTools.map((tool, index) => (
+                  <ToolCard
+                    key={tool.slug}
+                    tool={tool}
+                    cardRef={(el) => (cardRefs.current[index] = el)}
+                    opacity={cardPositions[index] ? getCardOpacity(calculateDistance(cardPositions[index].x, cardPositions[index].y, cardPositions[index].width, cardPositions[index].height)) : 1}
+                  />
                 ))}
               </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-16"
-              >
-                <div className="max-w-md mx-auto">
-                  <Search className="w-16 h-16 text-neutral-grey mx-auto mb-4" />
-                  <h3 className="text-xl font-heading font-semibold text-off-white mb-2">
-                    Tidak Ada Tools Ditemukan
+
+              {/* Empty State */}
+              {filteredTools.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center py-16"
+                >
+                  <div className="w-24 h-24 rounded-2xl mx-auto mb-6 flex items-center justify-center" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}>
+                    <span className="text-4xl">🔍</span>
+                  </div>
+                  <h3 className="text-2xl font-heading font-semibold mb-4" style={{ color: '#E0E0E0' }}>
+                    Tidak ada tools ditemukan
                   </h3>
-                  <p className="text-neutral-grey">
-                    {searchQuery 
-                      ? `Tidak ada tools yang cocok dengan pencarian "${searchQuery}"`
-                      : 'Tidak ada tools dalam kategori ini'
-                    }
+                  <p className="text-lg mb-6" style={{ color: '#B0B0B0' }}>
+                    Coba ubah filter atau kata kunci pencarian Anda.
                   </p>
-                  {(searchQuery || selectedCategory !== 'all') && (
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setSearchQuery('');
-                        setSelectedCategory('all');
-                      }}
-                      className="mt-4 px-6 py-2 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full font-medium hover:bg-white/30 transition-colors"
-                    >
-                      Reset Filter
-                    </motion.button>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setActiveCategory('Semua');
+                    }}
+                    className="px-6 py-3 rounded-lg font-semibold transition-all duration-300"
+                    style={{ backgroundColor: '#888888', color: '#121212' }}
+                  >
+                    Reset Filter
+                  </button>
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </div>
+      </motion.section>
     </div>
   );
-}
+};
+
+export default ToolsPage;
