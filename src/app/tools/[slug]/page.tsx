@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { allToolsData } from '@/lib/toolsData';
-import Multi2FA from '@/app/tools/multi-2fa-authenticator/page';
-import FacebookUidChecker from '@/components/tools/FacebookUidChecker';
+import Multi2FA from '@/components/tools/Multi2FA';
+import TempNotes from '@/components/tools/TempNotes';
 
 // Generate metadata for SEO (Pilar 12)
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -45,8 +45,8 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
   switch (tool.slug) {
     case 'multi-2fa-authenticator':
       return <Multi2FA />;
-    case 'facebook-uid-checker':
-      return <FacebookUidChecker />;
+    case 'temp-notes-spreadsheet':
+      return <TempNotes />;
     default:
       return (
         <div className="min-h-screen flex items-center justify-center">

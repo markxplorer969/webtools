@@ -17,6 +17,7 @@ import {
   Mic,
   Wifi,
   Database,
+  DatabaseZap,
   Cloud,
   Smartphone,
   Monitor,
@@ -84,15 +85,15 @@ export const allToolsData: Tool[] = [
     url: '/tools/multi-2fa-authenticator'
   },
   {
-    slug: 'facebook-uid-checker',
-    name: 'Facebook Live UID Checker',
-    description: 'Check if Facebook UID is active or unavailable. Real-time status verification.',
+    slug: 'temp-notes-spreadsheet',
+    name: 'TempNotes (Spreadsheet)',
+    description: 'Notes cepat DENGAN checker FB UID Live/Dead dan deteksi duplikat terintegrasi.',
     category: 'Utilitas',
-    icon: Facebook,
+    icon: DatabaseZap,
     is_live: true,
     layout_size: '2x1',
-    tags: ['Facebook', 'UID', 'Checker', 'Security'],
-    url: '/tools/facebook-uid-checker'
+    tags: ['Spreadsheet', 'Notes', 'Facebook', 'UID', 'Checker', 'Utility'],
+    url: '/tools/temp-notes-spreadsheet'
   },
   
   // Additional Live Tools
