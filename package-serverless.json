@@ -1,0 +1,29 @@
+{
+  "name": "facebook-uid-checker-serverless",
+  "version": "1.0.0",
+  "description": "Serverless function for checking Facebook UID status",
+  "main": "api/check-uid.js",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'No build step required for serverless functions'",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0",
+    "vercel": "^32.0.0"
+  },
+  "keywords": [
+    "serverless",
+    "facebook",
+    "uid-checker",
+    "api",
+    "vercel",
+    "netlify"
+  ],
+  "author": "Expert Backend Developer",
+  "license": "MIT"
+}

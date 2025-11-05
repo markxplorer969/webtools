@@ -66,7 +66,8 @@ import {
   QrCode,
   Fingerprint,
   Eye,
-  EyeOff
+  EyeOff,
+  Facebook
 } from 'lucide-react';
 
 export const allToolsData: Tool[] = [
@@ -81,6 +82,17 @@ export const allToolsData: Tool[] = [
     layout_size: '2x1',
     tags: ['2FA', 'Authentication', 'Security'],
     url: '/tools/multi-2fa-authenticator'
+  },
+  {
+    slug: 'facebook-uid-checker',
+    name: 'Facebook Live UID Checker',
+    description: 'Check if Facebook UID is active or unavailable. Real-time status verification.',
+    category: 'Utilitas',
+    icon: Facebook,
+    is_live: true,
+    layout_size: '2x1',
+    tags: ['Facebook', 'UID', 'Checker', 'Security'],
+    url: '/tools/facebook-uid-checker'
   },
   
   // Additional Live Tools
@@ -311,6 +323,7 @@ export const categories = [
   { name: 'Media', count: allToolsData.filter(tool => tool.category === 'Media').length },
   { name: 'Development', count: allToolsData.filter(tool => tool.category === 'Development').length },
   { name: 'Utility', count: allToolsData.filter(tool => tool.category === 'Utility').length },
+  { name: 'Utilitas', count: allToolsData.filter(tool => tool.category === 'Utilitas').length },
   { name: 'Productivity', count: allToolsData.filter(tool => tool.category === 'Productivity').length },
   { name: 'Design', count: allToolsData.filter(tool => tool.category === 'Design').length }
 ];
