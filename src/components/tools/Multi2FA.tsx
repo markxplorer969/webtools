@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { OTPAuth } from 'otpauth';
 import { LockKeyhole, Copy, Plus, Trash2, Clock } from 'lucide-react';
 import { Tool } from '@/lib/types';
+import { usePersistentState } from '@/lib/hooks/usePersistentState';
 
 interface CodeEntry {
   id: string;
@@ -18,14 +19,14 @@ interface Multi2FAProps {
 }
 
 export default function Multi2FA({ tool }: Multi2FAProps) {
-  // State Management (React Hooks)
-  const [rawInput, setRawInput] = useState('');
-  const [codes, setCodes] = useState<CodeEntry[]>([]);
+  // State Management dengan Persistent State (React Hooks)
+  const [rawInput, setRawInput] = usePersistentState<string>('2fa_rawInput', '');
+  const [codes, setCodes] = usePersistentState<CodeEntry[]>('2fa_codes', []);
   const [countdown, setCountdown] = useState(30);
   const [glarePosition, setGlarePosition] = useState({ x: -100, y: -100 });
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Ref for timer animation
+  // Ref untuk timer animation
   const timerRef = useRef<NodeJS.Timeout>();
 
   // Fungsi generateCodes (Pilar 10)

@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { audioFeedback } from '@/lib/audioFeedback';
+import { usePersistentState } from '@/lib/hooks/usePersistentState';
 
 interface Counters {
   total: number;
@@ -32,17 +33,17 @@ interface Counters {
 }
 
 const FacebookUidChecker = () => {
-  // State Management
-  const [rawInput, setRawInput] = useState('');
-  const [speed, setSpeed] = useState(25);
+  // State Management dengan Persistent State
+  const [rawInput, setRawInput] = usePersistentState<string>('fb_rawInput', '');
+  const [speed, setSpeed] = usePersistentState<number>('fb_speed', 25);
   const [isChecking, setIsChecking] = useState(false);
-  const [liveList, setLiveList] = useState<string[]>([]);
-  const [deadList, setDeadList] = useState<string[]>([]);
-  const [errorList, setErrorList] = useState<string[]>([]);
-  const [duplicateList, setDuplicateList] = useState<string[]>([]);
+  const [liveList, setLiveList] = usePersistentState<string[]>('fb_liveList', []);
+  const [deadList, setDeadList] = usePersistentState<string[]>('fb_deadList', []);
+  const [errorList, setErrorList] = usePersistentState<string[]>('fb_errorList', []);
+  const [duplicateList, setDuplicateList] = usePersistentState<string[]>('fb_duplicateList', []);
   const [totalCount, setTotalCount] = useState(0);
   const [processedCount, setProcessedCount] = useState(0);
-  const [counters, setCounters] = useState<Counters>({
+  const [counters, setCounters] = usePersistentState<Counters>('fb_counters', {
     total: 0,
     live: 0,
     dead: 0,
@@ -256,7 +257,7 @@ const FacebookUidChecker = () => {
     audioFeedback?.playWarning();
   };
 
-  // Handle Clear
+  // Handle Clear - Sekarang jauh lebih sederhana dengan usePersistentState
   const handleClear = () => {
     setRawInput('');
     setLiveList([]);
