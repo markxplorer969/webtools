@@ -2,11 +2,18 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { allToolsData } from '@/lib/toolsData';
 import Multi2FA from '@/components/tools/Multi2FA';
+import DataScratchpad from '@/components/tools/DataScratchpad';
 import TempNotes from '@/components/tools/TempNotes';
+import PasswordGenerator from '@/app/tools/password-generator/page';
+import TextAnalyzer from '@/app/tools/text-analyzer/page';
+import QRGenerator from '@/app/tools/qr-generator/page';
+import UrlShortener from '@/app/tools/url-shortener/page';
+import FacebookUidChecker from '@/app/tools/facebook-uid-checker/page';
 
 // Generate metadata for SEO (Pilar 12)
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const tool = allToolsData.find(t => t.slug === params.slug);
+  const { slug } = await params;
+  const tool = allToolsData.find(t => t.slug === slug);
   
   if (!tool) {
     return {
@@ -34,8 +41,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function ToolPage({ params }: { params: { slug: string } }) {
-  const tool = allToolsData.find(t => t.slug === params.slug);
+export default async function ToolPage({ params }: { params: { slug: string } }) {
+  const { slug } = await params;
+  const tool = allToolsData.find(t => t.slug === slug);
 
   if (!tool) {
     notFound();
@@ -47,6 +55,16 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
       return <Multi2FA />;
     case 'temp-notes-spreadsheet':
       return <TempNotes />;
+    case 'password-generator':
+      return <PasswordGenerator />;
+    case 'text-analyzer':
+      return <TextAnalyzer />;
+    case 'qr-generator':
+      return <QRGenerator />;
+    case 'url-shortener':
+      return <UrlShortener />;
+    case 'facebook-uid-checker':
+      return <FacebookUidChecker />;
     default:
       return (
         <div className="min-h-screen flex items-center justify-center">

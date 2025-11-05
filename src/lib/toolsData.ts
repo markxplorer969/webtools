@@ -141,6 +141,17 @@ export const allToolsData: Tool[] = [
     tags: ['URL', 'Shortener', 'Productivity'],
     url: '/tools/url-shortener'
   },
+  {
+    slug: 'facebook-uid-checker',
+    name: 'Facebook UID Checker',
+    description: 'Check Facebook UID status (Live/Dead) with real-time verification.',
+    category: 'Utility',
+    icon: Facebook,
+    is_live: true,
+    layout_size: '1x1',
+    tags: ['Facebook', 'UID', 'Checker', 'Social Media', 'Verification'],
+    url: '/tools/facebook-uid-checker'
+  },
   
   // Security Tools (Coming Soon)
   {
