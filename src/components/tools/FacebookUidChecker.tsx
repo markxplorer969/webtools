@@ -51,9 +51,15 @@ const FacebookUidChecker = () => {
   });
   const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState('Siap memeriksa UID...');
+  const [isMounted, setIsMounted] = useState(false);
   
   const processingRef = useRef(false);
   const queueRef = useRef<string[]>([]);
+
+  // Ensure component is mounted before accessing browser APIs
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Auto-ekstraksi link dan pembersihan
   const extractAndCleanUids = (input: string): string[] => {
@@ -109,7 +115,7 @@ const FacebookUidChecker = () => {
     processingRef.current = true;
     
     // Play start sound
-    if (audioFeedback && audioFeedback.playStart) {
+    if (audioFeedback?.playStart) {
       audioFeedback.playStart();
     }
     
@@ -202,7 +208,7 @@ const FacebookUidChecker = () => {
 
       // Play progress sound for significant milestones
       if (newProcessedCount % 10 === 0 || newProcessedCount === totalCount) {
-        audioFeedback.playProgress();
+        audioFeedback?.playProgress();
       }
 
       // Looping: Lanjutkan batch berikutnya dengan delay minimal
@@ -215,11 +221,11 @@ const FacebookUidChecker = () => {
         
         // Play completion sound based on results
         if (counters.error > 0) {
-          audioFeedback.playError();
+          audioFeedback?.playError();
         } else if (counters.live === 0 && counters.dead > 0) {
-          audioFeedback.playWarning();
+          audioFeedback?.playWarning();
         } else {
-          audioFeedback.playComplete();
+          audioFeedback?.playComplete();
         }
       }
 
@@ -229,7 +235,7 @@ const FacebookUidChecker = () => {
       setCounters(prev => ({ ...prev, error: prev.error + batch.length }));
       
       // Play error sound
-      audioFeedback.playError();
+      audioFeedback?.playError();
       
       // Lanjutkan ke batch berikutnya meskipun error
       if (queueRef.current.length > 0 && processingRef.current) {
@@ -237,7 +243,7 @@ const FacebookUidChecker = () => {
       } else {
         setIsChecking(false);
         setStatusText('Selesai dengan error.');
-        audioFeedback.playError();
+        audioFeedback?.playError();
       }
     }
   };
@@ -247,7 +253,7 @@ const FacebookUidChecker = () => {
     setIsChecking(false);
     processingRef.current = false;
     setStatusText('Dihentikan.');
-    audioFeedback.playWarning();
+    audioFeedback?.playWarning();
   };
 
   // Handle Clear
@@ -729,13 +735,14 @@ const FacebookUidChecker = () => {
                   </Button>
                 </div>
 
-                {/* Audio Toggle */}
+                {/* Audio Toggle - Client Side Only */}
+                {isMounted && (
                 <div className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg border border-gray-700">
                   <div className="flex items-center space-x-2">
                     <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                      audioFeedback.isAudioEnabled() ? 'bg-green-600' : 'bg-gray-600'
+                      audioFeedback?.isAudioEnabled() ? 'bg-green-600' : 'bg-gray-600'
                     }`}>
-                      {audioFeedback.isAudioEnabled() ? (
+                      {audioFeedback?.isAudioEnabled() ? (
                         <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0111 0H4a1 1 0 011-1V4a1 1 0 011-1h4a1 1 0 011 1v1a1 1 0 001 1zm0 14V7a1 1 0 001-1h4a1 1 0 001-1V4a1 1 0 001-1z" clipRule="evenodd"/>
                         </svg>
@@ -748,14 +755,15 @@ const FacebookUidChecker = () => {
                     <span className="text-sm text-gray-300">Audio Feedback</span>
                   </div>
                   <Button
-                    onClick={() => audioFeedback.setEnabled(!audioFeedback.isAudioEnabled())}
+                    onClick={() => audioFeedback?.setEnabled(!audioFeedback?.isAudioEnabled())}
                     variant="ghost"
                     size="sm"
                     className="text-gray-400 hover:text-white hover:bg-gray-800 transition-all duration-200"
                   >
-                    {audioFeedback.isAudioEnabled() ? 'Disable' : 'Enable'}
+                    {audioFeedback?.isAudioEnabled() ? 'Disable' : 'Enable'}
                   </Button>
                 </div>
+                )}
               </div>
               
               {/* Info Panel */}

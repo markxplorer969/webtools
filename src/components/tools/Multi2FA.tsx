@@ -108,11 +108,13 @@ export default function Multi2FA({ tool }: Multi2FAProps) {
 
   // Handle copy functionality
   const handleCopy = useCallback((code: string, id: string) => {
-    navigator.clipboard.writeText(code.replace(' ', ''));
-    setCopiedId(id);
-    
-    // Reset copied state after 2 seconds
-    setTimeout(() => setCopiedId(null), 2000);
+    if (typeof window !== 'undefined' && 'navigator' in window && navigator.clipboard) {
+      navigator.clipboard.writeText(code.replace(' ', ''));
+      setCopiedId(id);
+      
+      // Reset copied state after 2 seconds
+      setTimeout(() => setCopiedId(null), 2000);
+    }
   }, []);
 
   // Handle glare effect
