@@ -152,6 +152,17 @@ export const allToolsData: Tool[] = [
     tags: ['Facebook', 'UID', 'Checker', 'Social Media', 'Verification'],
     url: '/tools/facebook-uid-checker'
   },
+  {
+    slug: 'profile-photo-generator',
+    name: 'Profile Photo Generator',
+    description: 'Hasilkan foto profil untuk cowo atau cewe.',
+    category: 'Generator',
+    icon: Image,
+    is_live: true,
+    layout_size: '2x1',
+    tags: ['Profile', 'Photo', 'Generator', 'Avatar', 'Gender'],
+    url: '/tools/profile-photo-generator'
+  },
   
   // Security Tools (Coming Soon)
   {
@@ -337,5 +348,6 @@ export const categories = [
   { name: 'Utility', count: allToolsData.filter(tool => tool.category === 'Utility').length },
   { name: 'Utilitas', count: allToolsData.filter(tool => tool.category === 'Utilitas').length },
   { name: 'Productivity', count: allToolsData.filter(tool => tool.category === 'Productivity').length },
-  { name: 'Design', count: allToolsData.filter(tool => tool.category === 'Design').length }
+  { name: 'Design', count: allToolsData.filter(tool => tool.category === 'Design').length },
+  { name: 'Generator', count: allToolsData.filter(tool => tool.category === 'Generator').length }
 ];
