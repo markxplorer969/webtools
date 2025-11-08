@@ -68,11 +68,24 @@ import {
   Fingerprint,
   Eye,
   EyeOff,
-  Facebook
+  Facebook,
+  CaseUpper,
+  UserSquare
 } from 'lucide-react';
 
 export const allToolsData: Tool[] = [
   // Tool MVP - Live Tool
+  {
+    slug: 'name-generator',
+    name: 'Name Generator',
+    description: 'Hasilkan nama unik (Indonesia & Inggris) dengan nama depan dan belakang.',
+    category: 'Generator',
+    icon: UserSquare,
+    is_live: true,
+    layout_size: '1x1',
+    tags: ['Name', 'Generator', 'Indonesia', 'English'],
+    url: '/tools/name-generator'
+  },
   {
     slug: 'multi-2fa-authenticator',
     name: 'Multi-2FA Authenticator',

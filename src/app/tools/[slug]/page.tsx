@@ -9,6 +9,7 @@ import TextAnalyzer from '@/app/tools/text-analyzer/page';
 import QRGenerator from '@/app/tools/qr-generator/page';
 import UrlShortener from '@/app/tools/url-shortener/page';
 import FacebookUidChecker from '@/app/tools/facebook-uid-checker/page';
+import NameGenerator from '@/components/tools/NameGenerator';
 
 // Generate metadata for SEO (Pilar 12)
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -51,6 +52,8 @@ export default async function ToolPage({ params }: { params: { slug: string } })
 
   // Render Tool (Arsitektur Switch)
   switch (tool.slug) {
+    case 'name-generator':
+      return <NameGenerator />;
     case 'multi-2fa-authenticator':
       return <Multi2FA />;
     case 'temp-notes-spreadsheet':
