@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { OTPAuth } from 'otpauth';
+import * as OTPAuth from 'otpauth';
 import { LockKeyhole, Copy, Plus, Trash2, Clock } from 'lucide-react';
 import { Tool } from '@/lib/types';
 import { usePersistentState } from '@/lib/hooks/usePersistentState';
