@@ -237,6 +237,44 @@ const HomePage: React.FC = () => {
         </div>
       </motion.section>
 
+      {/* Support Section */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={sectionVariants}
+        className="py-16 relative"
+      >
+        <div className="container mx-auto px-4">
+          <motion.div 
+            variants={sectionVariants}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary-text mb-6">
+              Support Our Mission
+            </h2>
+            <p className="text-lg text-secondary-text mb-8 max-w-2xl mx-auto">
+              Help us keep these tools free and accessible to everyone. Your support allows us to continue developing and maintaining these digital utilities.
+            </p>
+            <motion.div 
+              variants={sectionVariants}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+              <a 
+                href="https://www.effectivegatecpm.com/he2th9j74?key=18ae90854e6bacfc4607019b14ff9473"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group px-8 py-4 bg-accent text-dark-char rounded-lg hover:bg-secondary-text transition-all duration-300 font-semibold text-lg flex items-center space-x-2 transform hover:scale-105"
+              >
+                <Heart className="w-5 h-5" />
+                <span>Support Us</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.section>
+
       {/* TUGAS 2: Visual Teaser (Pilar 14) */}
       <motion.section
         initial="hidden"

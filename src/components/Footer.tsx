@@ -137,7 +137,9 @@ const Footer: React.FC = () => {
                 Support our mission
               </p>
               <a 
-                href="#" 
+                href="https://www.effectivegatecpm.com/he2th9j74?key=18ae90854e6bacfc4607019b14ff9473" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 className="inline-flex items-center space-x-2 text-accent hover:text-secondary-text transition-colors duration-200 text-sm"
               >
                 <span>Donate</span>

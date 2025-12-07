@@ -4,6 +4,8 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import next from 'next';
 
+// Restart server
+
 const dev = process.env.NODE_ENV !== 'production';
 const currentPort = 3000;
 const hostname = '0.0.0.0';

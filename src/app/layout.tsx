@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageWrapper from "@/components/PageWrapper";
+import Script from "next/script";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -103,6 +104,12 @@ export default function RootLayout({
           minHeight: '100vh'
         }}
       >
+        {/* Popunder Ads Script */}
+        <Script
+          src="//pl28207906.effectivegatecpm.com/5f/7f/76/5f7f76242297db38a4618877b37ba56c.js"
+          strategy="afterInteractive"
+        />
+        
         <Header />
         <PageWrapper>
           {children}
