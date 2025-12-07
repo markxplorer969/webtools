@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Zap, Shield, Heart, Github, Twitter } from 'lucide-react';
 import Link from 'next/link';
+import NativeBanner from '@/components/ads/NativeBanner';
 
 
 
@@ -174,6 +175,9 @@ const HomePage: React.FC = () => {
         </div>
       </motion.section>
 
+      {/* Native Banner Ads - Top */}
+      <NativeBanner className="py-8" />
+
       {/* "Kenapa Mark Tools?" Section */}
       <motion.section
         initial="hidden"
@@ -236,6 +240,9 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </motion.section>
+
+      {/* Native Banner Ads - Middle */}
+      <NativeBanner className="py-8" />
 
       {/* Support Section */}
       <motion.section
@@ -622,6 +629,9 @@ const HomePage: React.FC = () => {
           </motion.div>
         </div>
       </motion.section>
+
+      {/* Native Banner Ads - Bottom */}
+      <NativeBanner className="py-8" />
     </div>
   );
 };

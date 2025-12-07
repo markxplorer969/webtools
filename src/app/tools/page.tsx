@@ -1,15 +1,14 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+
+import { useState, useEffect } from 'react';
 import ToolCard from '@/components/ToolCard';
 import SidebarKategori from '@/components/SidebarKategori';
 import SearchBar from '@/components/SearchBar';
 import FilterDrawer from '@/components/FilterDrawer';
-import { allToolsData, categories } from '@/lib/toolsData';
+import NativeBanner from '@/components/ads/NativeBanner';
+import { allToolsData } from '@/lib/toolsData';
 import { Tool } from '@/lib/types';
 import { Filter } from 'lucide-react';
-
-
 
 const ToolsPage: React.FC = () => {
   // State Management
@@ -17,18 +16,20 @@ const ToolsPage: React.FC = () => {
   const [filteredTools, setFilteredTools] = useState<Tool[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('Semua');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [cardPositions, setCardPositions] = useState<Array<{x: number, y: number, width: number, height: number}>>([]);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  
-  // Refs
-  const gridRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load data on mount
   useEffect(() => {
-    setAllTools(allToolsData);
-    setFilteredTools(allToolsData);
+    setIsLoading(true);
+    // Simulate loading delay for better UX
+    const timer = setTimeout(() => {
+      setAllTools(allToolsData);
+      setFilteredTools(allToolsData);
+      setIsLoading(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   // Filter tools based on category and search
@@ -54,86 +55,6 @@ const ToolsPage: React.FC = () => {
     setFilteredTools(filtered);
   }, [activeCategory, searchQuery, allTools]);
 
-  // Proximity Lighting - Mouse tracking
-  const handleGridMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!gridRef.current) return;
-    
-    const rect = gridRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setMousePosition({ x, y });
-  };
-
-  // Calculate distance from mouse to card
-  const calculateDistance = (cardX: number, cardY: number, cardWidth: number, cardHeight: number) => {
-    const cardCenterX = cardX + cardWidth / 2;
-    const cardCenterY = cardY + cardHeight / 2;
-    const distance = Math.sqrt(
-      Math.pow(mousePosition.x - cardCenterX, 2) + 
-      Math.pow(mousePosition.y - cardCenterY, 2)
-    );
-    return distance;
-  };
-
-  // Get opacity based on distance
-  const getCardOpacity = (distance: number) => {
-    const maxDistance = 300;
-    const minOpacity = 0.4;
-    const maxOpacity = 1;
-    const opacity = maxOpacity - (distance / maxDistance) * (maxOpacity - minOpacity);
-    return Math.max(minOpacity, Math.min(maxOpacity, opacity));
-  };
-
-  // Update card positions for proximity lighting
-  useEffect(() => {
-    const updateCardPositions = () => {
-      const positions = cardRefs.current.map((ref) => {
-        if (!ref || !gridRef.current) return { x: 0, y: 0, width: 0, height: 0 };
-        
-        const cardRect = ref.getBoundingClientRect();
-        const gridRect = gridRef.current!.getBoundingClientRect();
-        
-        return {
-          x: cardRect.left - gridRect.left,
-          y: cardRect.top - gridRect.top,
-          width: cardRect.width,
-          height: cardRect.height
-        };
-      });
-      
-      setCardPositions(positions);
-    };
-
-    updateCardPositions();
-    window.addEventListener('resize', updateCardPositions);
-    
-    return () => window.removeEventListener('resize', updateCardPositions);
-  }, [filteredTools]);
-
-  // Animation variants
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
-    }
-  };
-
-  const gridVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
-  };
-
   return (
     <div className="min-h-screen">
       {/* Mobile Filter Drawer */}
@@ -144,61 +65,47 @@ const ToolsPage: React.FC = () => {
         setActiveCategory={setActiveCategory}
       />
 
-      {/* Hero Section - Mobile First */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-        className="py-8 md:py-16 relative"
-      >
+      {/* Hero Section - Simple Design */}
+      <section className="py-12 md:py-20 relative">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto space-y-6 md:space-y-8">
             {/* Title */}
-            <motion.h1 
-              variants={sectionVariants}
-              className="text-3xl md:text-4xl lg:text-6xl font-heading font-bold"
-              style={{ color: '#E0E0E0' }}
-            >
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold" style={{ color: '#E0E0E0' }}>
               Kumpulan Tools Digital
-            </motion.h1>
-            
+            </h1>
+              
             {/* Description */}
-            <motion.p 
-              variants={sectionVariants}
-              className="text-lg md:text-xl lg:text-2xl leading-relaxed"
-              style={{ color: '#B0B0B0' }}
-            >
+            <p className="text-lg md:text-xl lg:text-2xl leading-relaxed" style={{ color: '#B0B0B0' }}>
               Jelajahi koleksi tools elegan untuk produktivitas, keamanan, dan pengembangan.
-            </motion.p>
+            </p>
 
-            {/* Stats */}
-            <motion.div 
-              variants={sectionVariants}
-              className="flex flex-col sm:flex-row gap-3 justify-center items-center"
-            >
-              <div className="px-4 py-2 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
-                🚀 {filteredTools.filter(tool => tool.is_live).length} Tools Aktif
+            {/* Simple Stats */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <div className="px-6 py-3 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
+                🚀 {filteredTools.length} Tools
               </div>
-              <div className="px-4 py-2 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
-                🔄 {filteredTools.filter(tool => !tool.is_live).length} Coming Soon
+              <div className="px-6 py-3 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
+                📊 {filteredTools.filter(tool => tool.category === 'Security').length} Security
               </div>
-            </motion.div>
+              <div className="px-6 py-3 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
+                🔧 {filteredTools.filter(tool => tool.category === 'Generator').length} Generator
+              </div>
+              <div className="px-6 py-3 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
+                📝 {filteredTools.filter(tool => tool.category === 'Text').length} Text
+              </div>
+              <div className="px-6 py-3 rounded-full text-sm font-semibold" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', color: '#888888' }}>
+                ⚙️ {filteredTools.filter(tool => tool.category === 'Utility').length} Utility
+              </div>
+            </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Main Content */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-        className="pb-16 md:pb-24"
-      >
+      <section className="pb-16 md:pb-24">
         <div className="container mx-auto px-4">
-          {/* Search and Filter Section - Stacked on Mobile */}
-          <div className="space-y-4 md:space-y-6 mb-8 md:mb-12">
+          {/* Search and Filter Section - Simple Design */}
+          <div className="space-y-6 md:space-y-8 mb-8 md:mb-12">
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto">
               <SearchBar 
@@ -212,10 +119,11 @@ const ToolsPage: React.FC = () => {
             <div className="flex md:hidden justify-center">
               <button
                 onClick={() => setIsFilterDrawerOpen(true)}
-                className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center space-x-2 border"
+                className="px-6 py-3 rounded-lg font-semibold flex items-center space-x-2 border"
                 style={{ 
                   borderColor: '#888888',
-                  color: '#888888'
+                  color: '#888888',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)'
                 }}
               >
                 <Filter className="w-5 h-5" />
@@ -237,6 +145,9 @@ const ToolsPage: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Native Banner Ads - Top */}
+          <NativeBanner className="mb-8" />
 
           {/* 2-Column Layout - Desktop */}
           <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-8">
@@ -270,40 +181,138 @@ const ToolsPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Adaptive Masonry Grid */}
-              <motion.div
-                ref={gridRef}
-                variants={gridVariants}
-                initial="hidden"
-                animate="visible"
-                onMouseMove={handleGridMouseMove}
-                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px]"
-                style={{ gridAutoFlow: 'dense' }}
-              >
-                {filteredTools.map((tool, index) => (
-                  <ToolCard
-                    key={tool.slug}
-                    tool={tool}
-                    cardRef={(el) => (cardRefs.current[index] = el)}
-                    opacity={cardPositions[index] ? getCardOpacity(calculateDistance(cardPositions[index].x, cardPositions[index].y, cardPositions[index].width, cardPositions[index].height)) : 1}
-                  />
-                ))}
-              </motion.div>
-
-              {/* Empty State */}
-              {filteredTools.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-16"
+              {/* Simple Grid Layout */}
+              <div className="space-y-8">
+                {/* First Row - Half of the tools */}
+                <div
+                  className="
+                    grid 
+                    grid-cols-1 
+                    sm:grid-cols-2 
+                    md:grid-cols-3 
+                    lg:grid-cols-4
+                    gap-4 
+                    sm:gap-5 
+                    md:gap-6
+                    w-full
+                  "
                 >
-                  <div className="w-24 h-24 rounded-2xl mx-auto mb-6 flex items-center justify-center" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}>
-                    <span className="text-4xl">🔍</span>
+                  {isLoading ? (
+                    // Loading Skeletons - First half
+                    Array.from({ length: 6 }).map((_, index) => (
+                      <div
+                        key={`skeleton-${index}`}
+                        className="glass rounded-2xl p-6"
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                          backdropFilter: 'blur(16px)',
+                          border: '1px solid rgba(136, 136, 136, 0.3)',
+                          minHeight: '280px'
+                        }}
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
+                          <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(68, 68, 68, 0.3)' }}></div>
+                        </div>
+                        <div className="flex-grow flex flex-col">
+                          <div className="h-6 rounded mb-3 w-3/4" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
+                          <div className="h-4 rounded mb-2 w-full" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                          <div className="h-4 rounded mb-2 w-5/6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                          <div className="flex flex-wrap gap-2 mb-4 mt-3">
+                            <div className="px-3 py-1 rounded-full w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
+                            <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t" style={{ borderColor: 'rgba(68, 68, 68, 0.3)' }}>
+                          <div className="px-3 py-1 rounded w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                          <div className="w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    // First half of tools
+                    filteredTools.slice(0, Math.ceil(filteredTools.length / 2)).map((tool) => (
+                      <ToolCard
+                        key={tool.slug}
+                        tool={tool}
+                        opacity={1}
+                      />
+                    ))
+                  )}
+                </div>
+
+                {/* Second Row - Remaining tools */}
+                <div
+                  className="
+                    grid 
+                    grid-cols-1 
+                    sm:grid-cols-2 
+                    md:grid-cols-3 
+                    lg:grid-cols-4
+                    gap-4 
+                    sm:gap-5 
+                    md:gap-6
+                    w-full
+                  "
+                >
+                  {isLoading ? (
+                    // Loading Skeletons - Second half
+                    Array.from({ length: 6 }).map((_, index) => (
+                      <div
+                        key={`skeleton-${index + 6}`}
+                        className="glass rounded-2xl p-6"
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                          backdropFilter: 'blur(16px)',
+                          border: '1px solid rgba(136, 136, 136, 0.3)',
+                          minHeight: '280px'
+                        }}
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
+                          <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(68, 68, 68, 0.3)' }}></div>
+                        </div>
+                        <div className="flex-grow flex flex-col">
+                          <div className="h-6 rounded mb-3 w-3/4" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
+                          <div className="h-4 rounded mb-2 w-full" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                          <div className="h-4 rounded mb-2 w-5/6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                          <div className="flex flex-wrap gap-2 mb-4 mt-3">
+                            <div className="px-3 py-1 rounded-full w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
+                            <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t" style={{ borderColor: 'rgba(68, 68, 68, 0.3)' }}>
+                          <div className="px-3 py-1 rounded w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                          <div className="w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    // Second half of tools
+                    filteredTools.slice(Math.ceil(filteredTools.length / 2)).map((tool) => (
+                      <ToolCard
+                        key={tool.slug}
+                        tool={tool}
+                        opacity={1}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+              
+                {/* Native Banner Ads - Middle */}
+                <NativeBanner />
+              {/* Simple Empty State */}
+              
+              {!isLoading && filteredTools.length === 0 && (
+                <div className="text-center py-20">
+                  <div className="w-32 h-32 rounded-3xl mx-auto mb-8 flex items-center justify-center" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}>
+                    <span className="text-5xl">🔍</span>
                   </div>
-                  <h3 className="text-2xl font-heading font-semibold mb-4" style={{ color: '#E0E0E0' }}>
+                  <h3 className="text-3xl font-heading font-semibold mb-6" style={{ color: '#E0E0E0' }}>
                     Tidak ada tools ditemukan
                   </h3>
-                  <p className="text-lg mb-6" style={{ color: '#B0B0B0' }}>
+                  <p className="text-xl mb-8 max-w-md mx-auto" style={{ color: '#B0B0B0' }}>
                     Coba ubah filter atau kata kunci pencarian Anda.
                   </p>
                   <button
@@ -311,17 +320,17 @@ const ToolsPage: React.FC = () => {
                       setSearchQuery('');
                       setActiveCategory('Semua');
                     }}
-                    className="px-6 py-3 rounded-lg font-semibold transition-all duration-300"
+                    className="px-8 py-4 rounded-xl font-semibold"
                     style={{ backgroundColor: '#888888', color: '#121212' }}
                   >
                     Reset Filter
                   </button>
-                </motion.div>
+                </div>
               )}
             </div>
           </div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 };

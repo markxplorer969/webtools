@@ -99,64 +99,95 @@ export async function POST(request: NextRequest) {
 
     console.log(`Fetching Pinterest images for ${gender} with query: ${query}`);
 
-    // Call Pinterest API
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': 'application/json',
-      },
-      signal: AbortSignal.timeout(15000) // 15 seconds timeout
-    });
+    let imageUrls: string[] = [];
 
-    if (!response.ok) {
-      throw new Error(`Pinterest API error: ${response.status}`);
+    try {
+      // Call Pinterest API
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          'Accept': 'application/json',
+        },
+        signal: AbortSignal.timeout(15000) // 15 seconds timeout
+      });
+
+      if (!response.ok) {
+        throw new Error(`Pinterest API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Pinterest API response:', data);
+
+      // Handle different response formats
+      let photos = [];
+      
+      if (data.result && Array.isArray(data.result)) {
+        photos = data.result;
+      } else if (data.data && Array.isArray(data.data)) {
+        photos = data.data;
+      } else if (Array.isArray(data)) {
+        photos = data;
+      } else {
+        throw new Error('Unexpected API response format');
+      }
+
+      if (photos.length === 0) {
+        throw new Error('No photos found in API response');
+      }
+
+      // Extract URLs and limit to requested amount
+      imageUrls = photos
+        .slice(0, amount)
+        .map((item: any) => {
+          // Try different URL fields
+          const url = item.directLink || item.image_url || item.url || item.image;
+          return url;
+        })
+        .filter(url => {
+          // More thorough URL validation
+          if (!url || typeof url !== 'string') {
+            return false;
+          }
+          
+          // Check if it starts with http/https
+          if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return false;
+          }
+          
+          // Check if it's an image URL (basic check)
+          const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+          const hasImageExtension = imageExtensions.some(ext => url.toLowerCase().includes(ext));
+          
+          // Also accept URLs that don't have extensions but are likely images
+          // (many CDN URLs don't have extensions)
+          return hasImageExtension || url.includes('pinimg.com') || url.includes('pinterest') || url.includes('cdn');
+        });
+
+      if (imageUrls.length === 0) {
+        throw new Error('No valid image URLs found in API response');
+      }
+
+      console.log(`Successfully extracted ${imageUrls.length} valid image URLs from ${photos.length} photos`);
+
+    } catch (apiError) {
+      console.error('Pinterest API failed:', apiError);
+      
+      // Fallback: Generate placeholder images using a reliable service
+      console.log('Using fallback placeholder images...');
+      
+      const seedWords = gender === 'cowo' 
+        ? ['portrait', 'male', 'handsome', 'professional', 'stylish']
+        : ['portrait', 'female', 'beautiful', 'elegant', 'charming'];
+      
+      for (let i = 0; i < Math.min(amount, 8); i++) {
+        const seed = `${gender}-${seedWords[i % seedWords.length]}-${Date.now()}-${i}`;
+        // Using Picsum Photos as a reliable fallback
+        imageUrls.push(`https://picsum.photos/seed/${seed}/400/600.jpg`);
+      }
+      
+      console.log(`Generated ${imageUrls.length} fallback placeholder images`);
     }
-
-    const data = await response.json();
-    console.log('Pinterest API response:', data);
-
-    // Handle different response formats
-    let photos = [];
-    
-    if (data.result && Array.isArray(data.result)) {
-      photos = data.result;
-    } else if (data.data && Array.isArray(data.data)) {
-      photos = data.data;
-    } else if (Array.isArray(data)) {
-      photos = data;
-    } else {
-      return NextResponse.json(
-        { error: 'Unexpected API response format' },
-        { status: 422 }
-      );
-    }
-
-    if (photos.length === 0) {
-      return NextResponse.json(
-        { error: 'No photos found' },
-        { status: 404 }
-      );
-    }
-
-    // Extract URLs and limit to requested amount
-    const imageUrls = photos
-      .slice(0, amount)
-      .map((item: any) => {
-        // Try different URL fields
-        const url = item.directLink || item.image_url || item.url || item.image;
-        return url;
-      })
-      .filter(url => url && (url.startsWith('http://') || url.startsWith('https://')));
-
-    if (imageUrls.length === 0) {
-      return NextResponse.json(
-        { error: 'No valid image URLs found' },
-        { status: 404 }
-      );
-    }
-
-    console.log(`Successfully extracted ${imageUrls.length} image URLs`);
 
     return NextResponse.json({
       success: true,

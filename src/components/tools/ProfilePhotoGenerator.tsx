@@ -10,6 +10,8 @@ import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { GlassCard } from '@/components/ui/glass-card';
 import { toast } from 'sonner';
+import JSZip from 'jszip';
+import NativeBanner from '@/components/ads/NativeBanner';
 
 interface FotoCardProps {
   url: string;
@@ -32,7 +34,7 @@ const FotoCard: React.FC<FotoCardProps> = ({ url, onDownload }) => {
           {/* Image Container */}
           <div className="relative w-full h-full overflow-hidden">
             <img
-              src={url}
+              src={`/api/proxy-image?url=${encodeURIComponent(url)}`}
               alt="Profile photo"
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               onError={(e) => {
@@ -94,7 +96,14 @@ const ProfilePhotoGenerator: React.FC = () => {
       
       if (data.success && data.urls) {
         setPhotos(data.urls);
-        toast.success(`Generated ${data.urls.length} photos successfully!`);
+        
+        // Check if fallback images were used
+        const hasFallbackImages = data.urls.some(url => url.includes('picsum.photos'));
+        if (hasFallbackImages) {
+          toast.info(`Generated ${data.urls.length} photos using placeholder images. Pinterest API unavailable.`);
+        } else {
+          toast.success(`Generated ${data.urls.length} photos successfully!`);
+        }
       } else {
         throw new Error(data.error || 'No photos generated');
       }
@@ -109,8 +118,28 @@ const ProfilePhotoGenerator: React.FC = () => {
   // Handle Download Single
   const handleDownload = async (url: string, filename?: string) => {
     try {
-      const response = await fetch(url);
+      // Validate URL before fetching
+      if (!url || !url.startsWith('http')) {
+        toast.error('Invalid photo URL');
+        return;
+      }
+
+      // Use our proxy API to avoid CORS issues
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+      
+      const response = await fetch(proxyUrl);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+      }
+      
       const blob = await response.blob();
+      
+      // Check if blob is valid
+      if (blob.size === 0) {
+        throw new Error('Empty file received');
+      }
+      
       const downloadUrl = URL.createObjectURL(blob);
       
       const link = document.createElement('a');
@@ -124,7 +153,7 @@ const ProfilePhotoGenerator: React.FC = () => {
       toast.success('Photo downloaded successfully!');
     } catch (error) {
       console.error('Error downloading photo:', error);
-      toast.error('Failed to download photo.');
+      toast.error('Failed to download photo. Please try again.');
     }
   };
 
@@ -146,42 +175,82 @@ const ProfilePhotoGenerator: React.FC = () => {
       // Add photos to ZIP sequentially to avoid overwhelming the browser
       console.log(`Starting to add ${photos.length} photos to ZIP...`);
       
+      let successCount = 0;
+      let failedCount = 0;
+      
       for (let i = 0; i < photos.length; i++) {
         try {
-          console.log(`Processing photo ${i + 1}/${photos.length}: ${photos[i]}`);
+          const photoUrl = photos[i];
+          
+          // Validate URL before fetching
+          if (!photoUrl || !photoUrl.startsWith('http')) {
+            console.warn(`Invalid photo URL ${i + 1}: ${photoUrl}`);
+            failedCount++;
+            continue;
+          }
+          
+          console.log(`Processing photo ${i + 1}/${photos.length}: ${photoUrl}`);
+          
+          // Use our proxy API to avoid CORS issues
+          const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(photoUrl)}`;
           
           // Add timeout for each photo fetch
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout per photo
+          const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 seconds timeout for proxy
           
-          const response = await fetch(photos[i], { 
-            signal: controller.signal 
+          const response = await fetch(proxyUrl, { 
+            signal: controller.signal
           });
           
           clearTimeout(timeoutId);
           
           if (!response.ok) {
-            console.warn(`Failed to fetch photo ${i + 1}: ${response.status}`);
+            console.warn(`Failed to fetch photo ${i + 1}: ${response.status} ${response.statusText}`);
+            failedCount++;
             continue;
           }
           
           const blob = await response.blob();
+          
+          // Check if blob is valid image
+          if (blob.size === 0) {
+            console.warn(`Empty blob for photo ${i + 1}`);
+            failedCount++;
+            continue;
+          }
+          
+          // Validate blob type
+          const blobType = blob.type.toLowerCase();
+          if (!blobType.includes('image/') && !blobType.includes('jpeg') && !blobType.includes('jpg') && !blobType.includes('png')) {
+            console.warn(`Invalid blob type for photo ${i + 1}: ${blobType}`);
+            failedCount++;
+            continue;
+          }
+          
           zip.file(`photo-${i + 1}.jpg`, blob);
+          successCount++;
           console.log(`Added photo ${i + 1} to ZIP`);
           
           // Small delay between processing to prevent overwhelming
           if (i % 3 === 0) {
-            await new Promise(resolve => setTimeout(resolve, 200));
+            await new Promise(resolve => setTimeout(resolve, 500));
           }
         } catch (error) {
           console.error(`Failed to process photo ${i + 1}:`, error);
+          failedCount++;
           // Continue with next photo even if one fails
         }
       }
 
       console.log('All photos added to ZIP, generating file...');
 
-      toast.info('Creating ZIP file...');
+      if (successCount === 0) {
+        toast.error('No valid photos could be downloaded. Please try generating new photos.');
+        setIsDownloadingAll(false);
+        return;
+      }
+
+      toast.info(`Creating ZIP file with ${successCount} photos...`);
 
       // Generate ZIP file with progress
       console.log('Generating ZIP blob...');
@@ -205,7 +274,11 @@ const ProfilePhotoGenerator: React.FC = () => {
       URL.revokeObjectURL(zipUrl);
       console.log('ZIP file downloaded successfully!');
 
-      toast.success(`Successfully downloaded ${photos.length} photos as ZIP file!`);
+      if (failedCount > 0) {
+        toast.warning(`Downloaded ${successCount} photos successfully. ${failedCount} photos failed to download.`);
+      } else {
+        toast.success(`Successfully downloaded all ${successCount} photos as ZIP file!`);
+      }
     } catch (error) {
       console.error('Error creating ZIP file:', error);
       
@@ -242,6 +315,9 @@ const ProfilePhotoGenerator: React.FC = () => {
     <div className="min-h-screen p-4 md:p-8">
       {/* Mission Control Layout (Pilar 10) */}
       <div className="max-w-7xl mx-auto">
+        {/* Native Banner Ads - Top */}
+        <NativeBanner className="mb-8" />
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Kolom Kiri - Output */}
@@ -403,6 +479,9 @@ const ProfilePhotoGenerator: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Native Banner Ads - Bottom */}
+        <NativeBanner className="mt-8" />
       </div>
     </div>
   );

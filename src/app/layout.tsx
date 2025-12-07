@@ -110,6 +110,13 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         
+        {/* Native Banner Ads Script */}
+        <Script
+          src="//pl28210360.effectivegatecpm.com/c75d5d260359b050a3f999df7fd4d073/invoke.js"
+          strategy="afterInteractive"
+          data-cfasync="false"
+        />
+        
         <Header />
         <PageWrapper>
           {children}
