@@ -162,10 +162,6 @@ const FakeMLLobby: React.FC = () => {
             Buat fake Mobile Legends lobby dengan avatar dan username kustom
           </p>
         </div>
-
-        {/* Native Banner Ads - Top */}
-        <NativeBanner className="mb-8" />
-
         <div className="grid md:grid-cols-2 gap-6">
           {/* Upload Section */}
           <Card className="bg-white/10 backdrop-blur-md border-white/20">
@@ -315,9 +311,6 @@ const FakeMLLobby: React.FC = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Native Banner Ads - Bottom */}
-        <NativeBanner className="mt-8" />
 
         {/* Instructions */}
         <Card className="mt-8 bg-white/10 backdrop-blur-md border-white/20">
