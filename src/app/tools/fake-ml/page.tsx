@@ -1,13 +1,26 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Upload, Download, Users, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-/* import NativeBanner from '@/components/ads/NativeBanner'; */
+import NativeBanner from '@/components/ads/NativeBanner';
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1
+    }
+  }
+};
 
 const FakeMLLobby: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -131,14 +144,14 @@ const FakeMLLobby: React.FC = () => {
   };
 
   return (
-<div className="min-h-screen p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="max-w-4xl mx-auto space-y-8"
       >
-      <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
@@ -150,8 +163,8 @@ const FakeMLLobby: React.FC = () => {
           </p>
         </div>
 
-     /*   {/* Native Banner Ads - Top }
-        <NativeBanner className="mb-8" /> */
+        {/* Native Banner Ads - Top */}
+        <NativeBanner className="mb-8" />
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Upload Section */}
@@ -303,8 +316,8 @@ const FakeMLLobby: React.FC = () => {
           </Card>
         </div>
 
-    /*    {/* Native Banner Ads - Bottom }
-       <NativeBanner className="mt-8" /> */
+        {/* Native Banner Ads - Bottom */}
+        <NativeBanner className="mt-8" />
 
         {/* Instructions */}
         <Card className="mt-8 bg-white/10 backdrop-blur-md border-white/20">
@@ -325,7 +338,8 @@ const FakeMLLobby: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      </motion.div>
     </div>
   );
 };

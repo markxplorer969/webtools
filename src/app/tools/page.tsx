@@ -182,128 +182,67 @@ const ToolsPage: React.FC = () => {
               </div>
 
               {/* Simple Grid Layout */}
-              <div className="space-y-8">
-                {/* First Row - Half of the tools */}
-                <div
-                  className="
-                    grid 
-                    grid-cols-1 
-                    sm:grid-cols-2 
-                    md:grid-cols-3 
-                    lg:grid-cols-4
-                    gap-4 
-                    sm:gap-5 
-                    md:gap-6
-                    w-full
-                  "
-                >
-                  {isLoading ? (
-                    // Loading Skeletons - First half
-                    Array.from({ length: 6 }).map((_, index) => (
-                      <div
-                        key={`skeleton-${index}`}
-                        className="glass rounded-2xl p-6"
-                        style={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          backdropFilter: 'blur(16px)',
-                          border: '1px solid rgba(136, 136, 136, 0.3)',
-                          minHeight: '280px'
-                        }}
-                      >
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
-                          <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(68, 68, 68, 0.3)' }}></div>
-                        </div>
-                        <div className="flex-grow flex flex-col">
-                          <div className="h-6 rounded mb-3 w-3/4" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
-                          <div className="h-4 rounded mb-2 w-full" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
-                          <div className="h-4 rounded mb-2 w-5/6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
-                          <div className="flex flex-wrap gap-2 mb-4 mt-3">
-                            <div className="px-3 py-1 rounded-full w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
-                            <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between mt-4 pt-4 border-t" style={{ borderColor: 'rgba(68, 68, 68, 0.3)' }}>
-                          <div className="px-3 py-1 rounded w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
-                          <div className="w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+              <div
+                className="
+                  grid 
+                  grid-cols-1 
+                  sm:grid-cols-2 
+                  md:grid-cols-3 
+                  lg:grid-cols-4
+                  gap-4 
+                  sm:gap-5 
+                  md:gap-6
+                  w-full
+                "
+              >
+                {isLoading ? (
+                  // Loading Skeletons
+                  Array.from({ length: 8 }).map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className="glass rounded-2xl p-6"
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(16px)',
+                        border: '1px solid rgba(136, 136, 136, 0.3)',
+                        minHeight: '280px'
+                      }}
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
+                        <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(68, 68, 68, 0.3)' }}></div>
+                      </div>
+                      <div className="flex-grow flex flex-col">
+                        <div className="h-6 rounded mb-3 w-3/4" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
+                        <div className="h-4 rounded mb-2 w-full" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                        <div className="h-4 rounded mb-2 w-5/6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                        <div className="flex flex-wrap gap-2 mb-4 mt-3">
+                          <div className="px-3 py-1 rounded-full w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
+                          <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    // First half of tools
-                    filteredTools.slice(0, Math.ceil(filteredTools.length / 2)).map((tool) => (
-                      <ToolCard
-                        key={tool.slug}
-                        tool={tool}
-                        opacity={1}
-                      />
-                    ))
-                  )}
-                </div>
-
-                {/* Second Row - Remaining tools */}
-                <div
-                  className="
-                    grid 
-                    grid-cols-1 
-                    sm:grid-cols-2 
-                    md:grid-cols-3 
-                    lg:grid-cols-4
-                    gap-4 
-                    sm:gap-5 
-                    md:gap-6
-                    w-full
-                  "
-                >
-                  {isLoading ? (
-                    // Loading Skeletons - Second half
-                    Array.from({ length: 6 }).map((_, index) => (
-                      <div
-                        key={`skeleton-${index + 6}`}
-                        className="glass rounded-2xl p-6"
-                        style={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          backdropFilter: 'blur(16px)',
-                          border: '1px solid rgba(136, 136, 136, 0.3)',
-                          minHeight: '280px'
-                        }}
-                      >
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 rounded-xl" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
-                          <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(68, 68, 68, 0.3)' }}></div>
-                        </div>
-                        <div className="flex-grow flex flex-col">
-                          <div className="h-6 rounded mb-3 w-3/4" style={{ backgroundColor: 'rgba(136, 136, 136, 0.2)' }}></div>
-                          <div className="h-4 rounded mb-2 w-full" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
-                          <div className="h-4 rounded mb-2 w-5/6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
-                          <div className="flex flex-wrap gap-2 mb-4 mt-3">
-                            <div className="px-3 py-1 rounded-full w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
-                            <div className="px-3 py-1 rounded-full w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.15)' }}></div>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between mt-4 pt-4 border-t" style={{ borderColor: 'rgba(68, 68, 68, 0.3)' }}>
-                          <div className="px-3 py-1 rounded w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
-                          <div className="w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
-                        </div>
+                      <div className="flex items-center justify-between mt-4 pt-4 border-t" style={{ borderColor: 'rgba(68, 68, 68, 0.3)' }}>
+                        <div className="px-3 py-1 rounded w-20 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
+                        <div className="w-16 h-6" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}></div>
                       </div>
-                    ))
-                  ) : (
-                    // Second half of tools
-                    filteredTools.slice(Math.ceil(filteredTools.length / 2)).map((tool) => (
-                      <ToolCard
-                        key={tool.slug}
-                        tool={tool}
-                        opacity={1}
-                      />
-                    ))
-                  )}
-                </div>
+                    </div>
+                  ))
+                ) : (
+                  // All tools in single grid
+                  filteredTools.map((tool) => (
+                    <ToolCard
+                      key={tool.slug}
+                      tool={tool}
+                      opacity={1}
+                    />
+                  ))
+                )}
               </div>
               
-                {/* Native Banner Ads - Middle */}
-                <NativeBanner />
-              {/* Simple Empty State */}
+              {/* Native Banner Ads - Middle */}
+              <NativeBanner />
               
+              {/* Simple Empty State */}
               {!isLoading && filteredTools.length === 0 && (
                 <div className="text-center py-20">
                   <div className="w-32 h-32 rounded-3xl mx-auto mb-8 flex items-center justify-center" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)' }}>

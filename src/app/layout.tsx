@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageWrapper from "@/components/PageWrapper";
+import UserMenu from "@/components/UserMenu";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Script from "next/script";
 
 const poppins = Poppins({
@@ -85,7 +87,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <AuthProvider>
+      <html lang="en" suppressHydrationWarning>
       <head>
         {/* Google AdSense Script */}
         <script 
@@ -118,6 +121,7 @@ export default function RootLayout({
         />
         
         <Header />
+        <UserMenu />
         <PageWrapper>
           {children}
         </PageWrapper>
@@ -125,5 +129,6 @@ export default function RootLayout({
         <Toaster />
       </body>
     </html>
+    </AuthProvider>
   );
 }
